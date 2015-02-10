@@ -1,3 +1,0 @@
-[submodule "app/sdk"]
-	path = app/sdk
-	url = git@github.com:flowxo/flowxo-sdk.git
