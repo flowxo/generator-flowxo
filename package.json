@@ -1,0 +1,28 @@
+{
+  "name": "generator-flowxo",
+  "version": "0.0.1",
+  "description": "FlowXO Service Generator",
+  "author": {
+    "name": "Joe Woodhouse"
+  },
+  "main": "app/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com:flowxo/flowxo-generator.git"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "peerDependencies": {
+    "yo": ">=1.0.0"
+  },
+  "engines": {
+    "node": ">=0.8.0",
+    "npm": ">=1.2.10"
+  },
+  "dependencies": {
+    "chalk": "^0.5.1",
+    "lodash": "^3.1.0",
+    "yeoman-generator": "^0.18.8"
+  }
+}
