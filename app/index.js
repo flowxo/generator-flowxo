@@ -12,25 +12,26 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator(args, options) {
   // Greet the user
   console.log(FlowXOUtils.greeting);
 
-  this.argument('name',{type: String, required: false});
+  this.argument('service',{type: String, required: true});
+  this.serviceName = 'flowxo-services-' + this.service;
   this.root = process.cwd();
-  this.sourceRoot(path.join(__dirname,'../templates'));
   this.options = options;
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname,'../package.json')));
+  this.destinationRoot(this.serviceName);
+
+  this.on('end',function(){
+  });
+
 };
 
 util.inherits(FlowXOGenerator,yeoman.generators.Base);
 
 FlowXOGenerator.prototype.coreFiles = function coreFiles(){
-  this.template('core/_bower.json','bower.json');
-  this.template('core/_bowerrc','.bowerrc');
-  this.template('core/_gitignore','.gitignore');
-  this.template('core/_package.json','package.json');
-  this.template('core/_Gruntfile.js','Gruntfile.js');
-  this.template('core/_jshintrc','.jshintrc');
-  this.template('core/_jshintrc','test/.jshintrc');
+  this.template('_gitignore','.gitignore');
+  this.template('_package.json','package.json');
+  this.template('_Gruntfile.js','Gruntfile.js');
 };
 
 FlowXOGenerator.prototype.installDeps = function installDeps(){
-  this.installDependencies({ skipInstall: this.options['skip-install'] });
+  this.installDependencies({ bower: false, skipInstall: this.options['skip-install'] });
 };
