@@ -7,18 +7,18 @@ var _ = require('lodash');
 var chalk = require('chalk');
 var FlowXOUtils = require('../utils');
 
+var SERVICES_ROOT = 'flowxo-services-';
+
+
+
 var FlowXOGenerator = module.exports = function FlowXOGenerator(args, options) {
   yeoman.generators.Base.apply(this,arguments);
   // Greet the user
   console.log(FlowXOUtils.greeting);
 
   this.argument('service',{type: String, required: true});
-  this.serviceName = 'flowxo-services-' + this.service;
-  this.root = process.cwd();
-  this.options = options;
-  this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname,'../package.json')));
-  this.destinationRoot(this.serviceName);
 
+  this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname,'../package.json')));
   this.on('end',function(){
   });
 
@@ -26,10 +26,49 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator(args, options) {
 
 util.inherits(FlowXOGenerator,yeoman.generators.Base);
 
+FlowXOGenerator.prototype.prompting = function(){
+  var done = this.async();
+  var self = this;
+  var prompts = FlowXOUtils.prompts.service;
+  this.prompt(prompts,function(props){
+    self.name = props.name;
+    self.slug = _.snakeCase(self.name);
+    self.auth_type = props.auth_type;
+    self.serviceName = SERVICES_ROOT + self.name.toLowerCase();
+    self.destinationRoot(self.serviceName);
+    done();
+  });
+
+};
+
+FlowXOGenerator.prototype.authPrompting = function authPrompting(){
+  var done = this.async();
+  var self = this;
+
+  var prompts;
+  if(this.auth_type === 'oauth'){
+    prompts = FlowXOUtils.prompts.oauth
+  }else{
+    prompts = FlowXOUtils.prompts.credentials;
+  }
+
+  FlowXOUtils.promptUtils.repeatedPrompt.call(this,'field',prompts,function(fields){
+    self.auth = JSON.stringify({
+      
+    });
+    done();
+  });
+};
+
 FlowXOGenerator.prototype.coreFiles = function coreFiles(){
   this.template('_gitignore','.gitignore');
   this.template('_package.json','package.json');
   this.template('_Gruntfile.js','Gruntfile.js');
+  this.template('_index.js','index.js');
+  this.mkdir('methods');
+  this.mkdir('tests');
+  this.template('_bootstrap.js','tests/bootstrap.js');
+  this.template('_service.spec.js','tests/service.spec.js');
 };
 
 FlowXOGenerator.prototype.installDeps = function installDeps(){
