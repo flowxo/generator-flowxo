@@ -16,7 +16,7 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator(args, options) {
   // Greet the user
   console.log(FlowXOUtils.greeting);
 
-  this.argument('service',{type: String, required: true});
+  this.argument('service',{type: String, required: false});
 
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname,'../package.json')));
   this.on('end',function(){
@@ -33,7 +33,9 @@ FlowXOGenerator.prototype.prompting = function(){
   this.prompt(prompts,function(props){
     self.name = props.name;
     self.slug = _.snakeCase(self.name);
-    self.auth_type = props.auth_type;
+    self.auth = {
+      type: props.auth_type
+    };
     self.serviceName = SERVICES_ROOT + self.name.toLowerCase();
     self.destinationRoot(self.serviceName);
     done();
@@ -46,18 +48,16 @@ FlowXOGenerator.prototype.authPrompting = function authPrompting(){
   var self = this;
 
   var prompts;
-  if(this.auth_type === 'oauth'){
-    prompts = FlowXOUtils.prompts.oauth
-  }else{
-    prompts = FlowXOUtils.prompts.credentials;
-  }
-
-  FlowXOUtils.promptUtils.repeatedPrompt.call(this,'field',prompts,function(fields){
-    self.auth = JSON.stringify({
-      
-    });
+  if(this.auth.type === 'oauth'){
+    this.auth.strategy = '';
+    this.auth.params = {};
     done();
-  });
+  }else if(this.auth.type === 'credentials'){
+    FlowXOUtils.promptUtils.repeatedPrompt.call(this,'field',FlowXOUtils.prompts.credentials,function(fields){
+      self.auth.fields = fields;
+      done();
+    });
+  }
 };
 
 FlowXOGenerator.prototype.coreFiles = function coreFiles(){

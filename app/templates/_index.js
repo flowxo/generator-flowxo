@@ -5,7 +5,7 @@ var service = new sdk.Service({
 	serviceRoot: __dirname,
 	name: '<%= name %>',
 	slug: '<%= slug %>',
-	auth: <%= auth %>
+	auth: <%= JSON.stringify(auth,null,2) %>
 });
 
 /*

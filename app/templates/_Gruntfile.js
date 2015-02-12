@@ -48,8 +48,8 @@ module.exports = function (grunt) {
   /**
    * Handler for Credentials Authentication Types
    */
-  var credentialsHandler = function(auth,cb){
-	var prompts = auth.fields.map(function(f){
+  var credentialsHandler = function(cb){
+	var prompts = service.auth.fields.map(function(f){
 		var p = {
 			name: f.key,
 			message: f.label
@@ -74,7 +74,7 @@ module.exports = function (grunt) {
   /**
    * Handler for OAuth Authentication Types
    */
-  var oauthHandler = function(auth,cb){
+  var oauthHandler = function(cb){
 	// Start an express server
 	var app = express();
 	app.get('/auth/:service/callback',function(req,res){
@@ -93,10 +93,13 @@ module.exports = function (grunt) {
   		done();
   	}
 
+  	var hdlr;
   	if(service.auth.type === 'credentials')
-  		credentialsHandler(writeAuth);
+  		hdlr =credentialsHandler;
   	else
-  		oauthHandler(writeAuth);
+  		hdlr = oauthHandler;
+
+  	hdlr(writeAuth);
   });
 
   grunt.registerTask('test',['mochaTest']);

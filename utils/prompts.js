@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 module.exports = {
 	service: [
 	  // Service Name
@@ -14,7 +16,7 @@ module.exports = {
 	    name: 'auth_type',
 	    message: 'What sort of authentication does the service use?',
 	    choices: [
-	      'Credentials (e.g. API Key or username/password',
+	      'Credentials (e.g. API Key or username/password)',
 	      'OAuth'
 	    ],
 	    default: 0,
@@ -30,12 +32,33 @@ module.exports = {
 
 	oauth: [],
 	credentials: [
-		// Type
+    // Field Label
+    {
+      type: 'input',
+      name: 'label',
+      message: 'Field Label'
+    },
+		// Field Type
     {
       type: 'list',
       name: 'type',
       choices: [{name: 'Text',value: 'text'},{name: 'Select',value:'select'}],
       message: 'Field Type'
+    },
+    // Field Key
+    {
+      type: 'input',
+      name: 'key',
+      default: function(answers){
+        return _.snakeCase(answers.label)
+      },
+      message: 'Field Key'
+    },
+    // Field Description
+    {
+      type: 'input',
+      name: 'description',
+      message: 'Field Description'
     }
 	]
 };
