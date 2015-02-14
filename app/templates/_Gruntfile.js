@@ -71,19 +71,45 @@ module.exports = function (grunt) {
 	});
   };
 
+
   /**
    * Handler for OAuth Authentication Types
    */
   var oauthHandler = function(cb){
-	// Start an express server
-	var app = express();
-	app.get('/auth/:service/callback',function(req,res){
-		res.status(200).send('Thanks.');
-	});
+        // Load the provider configuration
+        var provider = require('./provider.json');
+        // Set the callback URL
+        var cbUrl = provider.server.callback = '/handle_oauth_response';
 
-	app.listen(OAUTH_CB_PORT);
-	cb();
-  };  
+        var Grant = require('grant').express();
+        var grant = new Grant(provider);
+        var open = require('open');
+        var url = require('url');
+        var app = express();
+        app.use(grant);
+
+        app.get(cbUrl,function(req,res){
+                console.log(req.query);
+                res.send(JSON.stringify(res.query,null,2));
+                res.status(200).send('Thankyou. You may now close this browser window');
+                cb(req.query);
+        });
+
+        var serverUrl = url.parse(url.format({
+                protocol: provider.server.protocol,
+                host: provider.server.host})
+        );
+
+        app.listen(serverUrl.port || OAUTH_CB_PORT);
+        var url = url.format({
+                protocol: provider.server.protocol || 'http',
+                hostname: serverUrl.hostname,
+                port: serverUrl.port,
+                pathname: '/connect/' + provider.name});
+        grunt.log.writeln(["Opening OAuth authentication in browser. Please confirm in browser window to continue."]);
+        open(url);
+  };
+
 
 
   grunt.registerTask('auth','Create an authentication',function(){

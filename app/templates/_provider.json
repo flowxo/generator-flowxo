@@ -1,0 +1,12 @@
+{
+  "name": "<%= slug %>",
+  "server": {
+    "protocol": "http",
+    "host": "flowxo-dev.cc:9000",
+    "callback": "/handle_oauth_response"
+  },
+  "<%= slug %>": {
+    "key": "",
+    "secret": ""
+  }
+}

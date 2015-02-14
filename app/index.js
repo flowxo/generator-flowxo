@@ -69,6 +69,10 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles(){
   this.mkdir('tests');
   this.template('_bootstrap.js','tests/bootstrap.js');
   this.template('_service.spec.js','tests/service.spec.js');
+
+  if(this.auth.type === 'oauth'){
+    this.template('_provider.json','provider.json');
+  }
 };
 
 FlowXOGenerator.prototype.installDeps = function installDeps(){
