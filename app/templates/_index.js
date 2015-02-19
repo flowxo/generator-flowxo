@@ -5,7 +5,17 @@ var service = new sdk.Service({
 	serviceRoot: __dirname,
 	name: '<%= name %>',
 	slug: '<%= slug %>',
-	auth: <%= JSON.stringify(auth,null,2) %>
+	<% if(auth.type == 'oauth') { %>
+	auth: {
+		type: 'oauth',
+		authProvider: require('./provider')
+	}
+	<% } else { %>
+	auth: {
+		type: 'credentials',
+		fields: <%= JSON.stringify(auth.fields,null,2) %>
+	}
+	<% } %>
 });
 
 /*

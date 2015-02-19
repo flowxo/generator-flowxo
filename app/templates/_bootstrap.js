@@ -1,7 +1,11 @@
 var chai = require('chai');
   should = chai.should(),
      sdk = require('flowxo-sdk')
- service = require('../');
+ service = require('../'),
+  replay = require('replay');
+
+replay.fixtures = __dirname + '/fixtures';
+replay.mode = process.env.REPLAY || 'bloody';
 
 chai.config.includeStack = true;
 

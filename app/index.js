@@ -71,7 +71,7 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles(){
   this.template('_service.spec.js','tests/service.spec.js');
 
   if(this.auth.type === 'oauth'){
-    this.template('_provider.json','provider.json');
+    this.template('_provider.js','provider.js');
   }
 };
 

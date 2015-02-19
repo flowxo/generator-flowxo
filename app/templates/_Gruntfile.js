@@ -4,8 +4,14 @@ var express = require('express');
 var inquirer = require('inquirer');
 var fs = require('fs');
 var service = require('./');
+var SDK = require('flowxo-sdk');
+var chalk = require('chalk');
 
-var OAUTH_CB_PORT = 9000;
+/******************************************************************************
+ * Global Vars
+******************************************************************************/
+var AUTH_FILENAME = 'auth.json';
+var OAUTH_SERVER_PORT = 9000;
 
 module.exports = function (grunt) {
 
@@ -41,7 +47,120 @@ module.exports = function (grunt) {
   	}
   });
 
-  grunt.registerTask('run','Run a service method',function(method){
+  grunt.registerTask('_run','Run a service method',function(method){
+    var done = this.async();
+
+    // This will store the current state
+    var state = {};
+
+    var runner = new SDK.ScriptRunner(service,{auth: grunt.auth});
+
+    var runPrompts = [{
+      type: 'expand',
+      name: 'run',
+      message: 'Run again?',
+      choices:[{
+        key: 'r',
+        name: 'Repeat with same parameters',
+        value: 'repeat'
+      },{
+        key: 'u',
+        name: 'Update input parameters and run again',
+        value: 'update'
+      },new inquirer.Separator(), {
+        key: 'q',
+        name: 'Quit',
+        value: 'quit'
+      }]
+    }];
+
+    var runMethod = function(cb){
+      return runner.run(state.method.slug,state.script,state.options,function(err,data){
+        output(data);
+        cb();
+      });
+    };
+
+    var output = function(data){
+      grunt.log.writeln("Script Output:");
+      grunt.log.writeln(chalk.cyan(JSON.stringify(data,null,2)));
+    };
+
+    var runManager = function(cb){
+      runMethod(function(err,output){
+        inquirer.prompt(runPrompts,function(runAnswers){
+          switch(runAnswers.run){
+            case 'repeat':
+              runManager(cb);
+              break;
+            case 'update':
+              doFieldPrompt(function(){
+                runManager(cb);
+              });
+              break;
+            default:
+              cb();
+          }
+        });
+      });
+    };
+
+    var doMethodPrompt = function(cb){
+      // First we need them to choose the script
+      var methodPrompt = [{
+        type: 'list',
+        name: 'method',
+        message: 'Select a method to run',
+        choices: service.methods.map(function(m){
+          return {name: m.name, value: m}
+        })
+      }];
+
+      inquirer.prompt(methodPrompt,function(answers){
+        state.method = answers.method;
+        doScriptPrompt(cb);
+      });
+    };
+
+    var doScriptPrompt = function(cb){
+      var scriptPrompt = [{
+        type: 'list',
+        name: 'script',
+        message: 'Select a script',
+        choices: Object.keys(state.method.scripts)
+      }];
+
+      inquirer.prompt(scriptPrompt,function(answers){
+        state.script = answers.script;
+        doFieldPrompt(cb);
+      });
+    };
+
+    var doFieldPrompt = function(cb){
+      if(state.script === 'run' && state.method.fields && state.method.fields.input){
+        var fieldPrompts = state.method.fields.input.map(function(f){
+          var message = '[' + f.label + (f.required ? ' - required]' : ']');
+          return {
+            type: 'input',
+            name: f.key,
+            message: message,
+            validate: function(input){
+              return f.required ? input && input.length > 0 : true;
+            }
+          };
+        });
+        inquirer.prompt(fieldPrompts,function(answers){
+          state.options = { input: answers };
+          cb();
+        });
+      }else{
+        cb();
+      }
+    };
+
+    doMethodPrompt(function(){
+      runManager(done);
+    });
 
   });
 
@@ -49,75 +168,95 @@ module.exports = function (grunt) {
    * Handler for Credentials Authentication Types
    */
   var credentialsHandler = function(cb){
-	var prompts = service.auth.fields.map(function(f){
-		var p = {
-			name: f.key,
-			message: f.label
-		};
+  	var prompts = service.auth.fields.map(function(f){
+  		var p = {
+  			name: f.key,
+  			message: f.label
+  		};
 
-		if(f.type === 'text'){
-			p.type = 'input';
-		}else if(f.type === 'select'){
-			p.type = 'list';
-			p.choices = f.input_options.map(function(i){
-				return {name: i.label, value: i.value};
-			});
-		}
-		return p;
-	});
+  		if(f.type === 'text'){
+  			p.type = 'input';
+  		}else if(f.type === 'select'){
+  			p.type = 'list';
+  			p.choices = f.input_options.map(function(i){
+  				return {name: i.label, value: i.value};
+  			});
+  		}
+  		return p;
+  	});
 
-	inquirer.prompt(prompts,function(answers){
-		cb(answers);
-	});
+  	inquirer.prompt(prompts,function(answers){
+  		cb(answers);
+  	});
   };
-
 
   /**
    * Handler for OAuth Authentication Types
    */
   var oauthHandler = function(cb){
-        // Load the provider configuration
-        var provider = require('./provider.json');
-        // Set the callback URL
-        var cbUrl = provider.server.callback = '/handle_oauth_response';
-
-        var Grant = require('grant').express();
-        var grant = new Grant(provider);
         var open = require('open');
         var url = require('url');
+        var passport = require('passport');
+
         var app = express();
-        app.use(grant);
+        var provider = service.auth.authProvider;
 
-        app.get(cbUrl,function(req,res){
-                console.log(req.query);
-                res.send(JSON.stringify(res.query,null,2));
-                res.status(200).send('Thankyou. You may now close this browser window');
-                cb(req.query);
-        });
+        var name = provider.name;
+        var route = '/connect/' + name;
+        var cbRoute = route + '/callback';
 
-        var serverUrl = url.parse(url.format({
-                protocol: provider.server.protocol,
-                host: provider.server.host})
-        );
+        // Calculate the callbackURL for the request
+        var serverUrl = url.parse(process.env.BASE_URL);
 
-        app.listen(serverUrl.port || OAUTH_CB_PORT);
-        var url = url.format({
-                protocol: provider.server.protocol || 'http',
+        var callbackURL = url.format({
+                protocol: serverUrl.protocol,
                 hostname: serverUrl.hostname,
                 port: serverUrl.port,
-                pathname: '/connect/' + provider.name});
+                pathname: cbRoute
+        });
+
+        var options = {
+          clientID: provider.clientId,
+          clientSecret: provider.clientSecret,
+          callbackURL: callbackURL
+        };
+
+        var callback = function(access_token, refresh_token, profile, done){
+          done(null,{
+            access_token: access_token,
+            refresh_token: refresh_token,
+            profile: profile
+          });
+        };
+
+        var strategy = new provider.strategy(options,callback);
+
+        passport.use(name,strategy);
+        app.use(passport.initialize());
+
+        app.get(route,passport.authorize(name,provider.params));
+        app.get(cbRoute,passport.authorize(name),function(req,res){
+          res.status(200).send('Thankyou. You may now close this window.');
+          cb(req.account);
+        });
+
+        app.listen(serverUrl.port || OAUTH_SERVER_PORT);
+
+        var url = url.format({
+                protocol: serverUrl.protocol,
+                hostname: serverUrl.hostname,
+                port: serverUrl.port,
+                pathname: route});
         grunt.log.writeln(["Opening OAuth authentication in browser. Please confirm in browser window to continue."]);
         open(url);
   };
 
-
+  var writeAuthentication = function(auth){
+        fs.writeFileSync(AUTH_FILENAME,JSON.stringify(auth));
+  };
 
   grunt.registerTask('auth','Create an authentication',function(){
   	var done = this.async();
-  	function writeAuth(auth){
-  		fs.writeFileSync('./auth.json',JSON.stringify(auth));
-  		done();
-  	}
 
   	var hdlr;
   	if(service.auth.type === 'credentials')
@@ -125,9 +264,63 @@ module.exports = function (grunt) {
   	else
   		hdlr = oauthHandler;
 
-  	hdlr(writeAuth);
+  	hdlr(function(auth){
+      writeAuthentication(auth);
+      done();
+    });
   });
 
+  grunt.registerTask('auth:load',function(){
+    try{
+      grunt.auth = require('./'+AUTH_FILENAME);
+    }catch(e){
+
+    }
+  });
+
+  grunt.registerTask('auth:refresh','Refresh an access token',function(){
+    var done = this.async();
+    var refresh = require('passport-oauth2-refresh');
+    var provider = service.auth.authProvider;
+
+    try{
+      var auth = require('./'+AUTH_FILENAME);
+    }catch(e){
+      grunt.fail.fatal("Unable to load existing authentication to refresh - please check you have an " + AUTH_FILENAME + " file in the root of your service");
+    }
+
+    var options = {
+      clientID: provider.clientId,
+      clientSecret: provider.clientSecret,
+    };
+
+    var callback = function(access_token, refresh_token, profile, done){
+      done(null,{
+        access_token: access_token,
+        refresh_token: refresh_token,
+        profile: profile
+      });
+    };
+
+    var strategy = new provider.strategy(options,callback);
+    refresh.use(strategy);
+
+    refresh.requestNewAccessToken(strategy.name,auth.access_token,function(err,accessToken,refreshToken){
+      if(err){
+        grunt.fail.fatal("Generatring access token failed:" + err);
+      }
+
+      if(typeof refreshToken !== 'undefined'){
+        auth.refresh_token = refreshToken;
+      }
+
+      auth.access_token = accessToken;
+      writeAuthentication(auth);
+      done();
+    });
+  });
+
+  grunt.registerTask('run',['auth:load','_run']);
   grunt.registerTask('test',['mochaTest']);
   grunt.registerTask('default',['test','watch']);
 };
