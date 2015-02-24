@@ -31,6 +31,8 @@
     "requireLocal": false,
     "rootPath": false,
     "spyOn": false,
-    "service": true
+    "service": true,
+    "should": false,
+    "runner": true
   }
 }

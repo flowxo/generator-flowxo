@@ -41,8 +41,8 @@ module.exports = function (grunt) {
   				interrupt: false,
   				debounceDelay: 250
   			},
-  			files: ['methods/**/*.js','tests/**/*.spec.js'],
-  			tasks: ['test']
+  			files: ['index.js','methods/**/*.js','tests/**/*.spec.js'],
+  			tasks: ['jshint','test']
   		}
   	},
     jshint:{
@@ -152,14 +152,25 @@ module.exports = function (grunt) {
       if(state.script === 'run' && state.method.fields && state.method.fields.input){
         var fieldPrompts = state.method.fields.input.map(function(f){
           var message = '[' + f.label + (f.required ? ' - required]' : ']');
-          return {
-            type: 'input',
-            name: f.key,
-            message: message,
-            validate: function(input){
-              return f.required ? input && input.length > 0 : true;
-            }
-          };
+          if(!f.type || f.type === 'text'){
+            return {
+              type: 'input',
+              name: f.key,
+              message: message,
+              validate: function(input){
+                return f.required ? input && input.length > 0 : true;
+              }
+            };
+          }else if(f.type === 'select'){
+            return {
+              type: 'list',
+              name: f.key,
+              message: message,
+              choices: f.input_options.map(function(c){
+                return { name: c.label, value: c.value };
+              })
+            };
+          }
         });
         inquirer.prompt(fieldPrompts,function(answers){
           state.options = { input: answers };
