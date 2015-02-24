@@ -36,14 +36,14 @@ module.exports = {
     {
       type: 'input',
       name: 'label',
-      message: 'Field Label'
+      message: 'Credentials Field Label e.g. "API Key" or "Access Token"'
     },
 		// Field Type
     {
       type: 'list',
       name: 'type',
       choices: [{name: 'Text',value: 'text'},{name: 'Select',value:'select'}],
-      message: 'Field Type'
+      message: 'Credentials Field Type'
     },
     // Field Key
     {
@@ -52,13 +52,13 @@ module.exports = {
       default: function(answers){
         return _.snakeCase(answers.label)
       },
-      message: 'Field Key'
+      message: 'Credentials Field Key e.g. apikey or auth_token, used by your scripts'
     },
     // Field Description
     {
       type: 'input',
       name: 'description',
-      message: 'Field Description'
+      message: 'Credentials Field Description - the message describing the field to the end-user'
     }
 	]
 };

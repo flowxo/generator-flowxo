@@ -20,6 +20,8 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator(args, options) {
 
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname,'../package.json')));
   this.on('end',function(){
+    this.log(chalk.cyan('\nYour service has been generated in the '+this.serviceName+' folder.\n'));
+    this.log(chalk.cyan(FlowXOUtils.messages.whatNext[this.auth.type]));
   });
 
 };
@@ -53,6 +55,7 @@ FlowXOGenerator.prototype.authPrompting = function authPrompting(){
     this.auth.params = {};
     done();
   }else if(this.auth.type === 'credentials'){
+    this.log(chalk.bgGreen("You now need to define the necessary credential fields for the service connection."));
     FlowXOUtils.promptUtils.repeatedPrompt.call(this,'field',FlowXOUtils.prompts.credentials,function(fields){
       self.auth.fields = fields;
       done();
@@ -81,5 +84,10 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles(){
 };
 
 FlowXOGenerator.prototype.installDeps = function installDeps(){
-  this.installDependencies({ bower: false, skipInstall: this.options['skip-install'] });
+  this.installDependencies({ 
+    bower: false, 
+    skipInstall: this.options['skip-install'],
+    skipMessage: true 
+  });
 };
+

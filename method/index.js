@@ -8,10 +8,10 @@ var chalk = require('chalk');
 var FlowXOUtils = require('../utils');
 
 var FlowXOMethodGenerator = module.exports = function FlowXOMethodGenerator(args, options) {
-  yeoman.generators.NamedBase.apply(this,arguments);
+  yeoman.generators.Base.apply(this,arguments);
 };
 
-util.inherits(FlowXOMethodGenerator,yeoman.generators.NamedBase);
+util.inherits(FlowXOMethodGenerator,yeoman.generators.Base);
 
 FlowXOMethodGenerator.prototype.prompts = function prompts(){
   var done = this.async();
@@ -54,6 +54,24 @@ FlowXOMethodGenerator.prototype.prompts = function prompts(){
       filter: function(val){
         return val.toLowerCase()
       }
+    },
+    // Scripts
+    {
+      type: 'checkbox',
+      name: 'scripts',
+      message: 'Select which scripts you would like to generate for the method.',
+      choices: [{
+        name: 'Run',
+        value: 'run',
+        checked: true,
+        disabled: true
+      },{
+        name: 'Custom Input',
+        value: 'input',
+      },{
+        name: 'Custom Output',
+        value: 'output'
+      }]
     }
   ];
 
@@ -78,6 +96,10 @@ FlowXOMethodGenerator.prototype.methodFiles = function coreFiles(){
   this.destinationRoot(methodDir);
   this.template('_config.js','config.js');
   this.template('_run.js','run.js');
-  this.template('_input.js','input.js');
-  this.template('_output.js','output.js');
+  if(this.scripts.indexOf('input')!==-1){
+    this.template('_input.js','input.js');
+  }
+  if(this.scripts.indexOf('output')!==-1){
+    this.template('_output.js','output.js');
+  }
 };

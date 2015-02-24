@@ -6,9 +6,9 @@ var config = {
 	type: '<%= type %>',
 	kind: '<%= kind %>',
 	scripts:{
-		run: require('./run'),
-		input: require('./input'),
-		output: require('./output')
+		<% if(scripts.indexOf('input')!==-1){ %> input: require('./input'), <% } %>
+		<% if(scripts.indexOf('output')!==-1){%> output: require('./output'), <% } %>
+		run: require('./run')
 	},
 	fields:{
 		input: [],
