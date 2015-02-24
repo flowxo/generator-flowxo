@@ -13,7 +13,15 @@ var service = new sdk.Service({
 	<% } else { %>
 	auth: {
 		type: 'credentials',
-		fields: <%= JSON.stringify(auth.fields,null,2) %>
+		fields: [
+		  <% _.each(auth.fields,function(f){ %>{
+		  type: '<%= f.type %>',
+		  key: '<%= f.key %>',
+		  label: '<%= f.label %>',
+		  description: '<%= f.description %>',
+		  required: true
+		  },<% }); %>
+		]
 	}
 	<% } %>
 });

@@ -62,6 +62,7 @@ FlowXOGenerator.prototype.authPrompting = function authPrompting(){
 
 FlowXOGenerator.prototype.coreFiles = function coreFiles(){
   this.template('_gitignore','.gitignore');
+  this.template('_jshintrc','.jshintrc');
   this.template('_package.json','package.json');
   this.template('_Gruntfile.js','Gruntfile.js');
   this.template('_index.js','index.js');
@@ -69,9 +70,13 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles(){
   this.mkdir('tests');
   this.template('_bootstrap.js','tests/bootstrap.js');
   this.template('_service.spec.js','tests/service.spec.js');
+  this.template('_jshintrc_test','tests/.jshintrc');
+
 
   if(this.auth.type === 'oauth'){
     this.template('_provider.js','provider.js');
+  }else if(this.auth.type === 'credentials'){
+    this.template('_ping.js','ping.js');
   }
 };
 

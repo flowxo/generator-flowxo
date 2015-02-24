@@ -44,10 +44,22 @@ module.exports = function (grunt) {
   			files: ['methods/**/*.js','tests/**/*.spec.js'],
   			tasks: ['test']
   		}
-  	}
+  	},
+    jshint:{
+      options:{
+        jshintrc: true,
+        reporter: require('jshint-stylish')
+      },
+      source:{
+        src: ['Gruntfile.js','index.js','ping.js','provider.js','methods/**/*.js']
+      },
+      tests:{
+        src: ['tests/**/*.js'],
+      }
+    }
   });
 
-  grunt.registerTask('_run','Run a service method',function(method){
+  grunt.registerTask('_run','Run a service method',function(){
     var done = this.async();
 
     // This will store the current state
@@ -82,12 +94,12 @@ module.exports = function (grunt) {
     };
 
     var output = function(data){
-      grunt.log.writeln("Script Output:");
+      grunt.log.writeln('Script Output:');
       grunt.log.writeln(chalk.cyan(JSON.stringify(data,null,2)));
     };
 
     var runManager = function(cb){
-      runMethod(function(err,output){
+      runMethod(function(){
         inquirer.prompt(runPrompts,function(runAnswers){
           switch(runAnswers.run){
             case 'repeat':
@@ -112,7 +124,7 @@ module.exports = function (grunt) {
         name: 'method',
         message: 'Select a method to run',
         choices: service.methods.map(function(m){
-          return {name: m.name, value: m}
+          return {name: m.name, value: m};
         })
       }];
 
@@ -242,13 +254,13 @@ module.exports = function (grunt) {
 
         app.listen(serverUrl.port || OAUTH_SERVER_PORT);
 
-        var url = url.format({
+        var userUrl = url.format({
                 protocol: serverUrl.protocol,
                 hostname: serverUrl.hostname,
                 port: serverUrl.port,
                 pathname: route});
-        grunt.log.writeln(["Opening OAuth authentication in browser. Please confirm in browser window to continue."]);
-        open(url);
+        grunt.log.writeln(['Opening OAuth authentication in browser. Please confirm in browser window to continue.']);
+        open(userUrl);
   };
 
   var writeAuthentication = function(auth){
@@ -259,10 +271,12 @@ module.exports = function (grunt) {
   	var done = this.async();
 
   	var hdlr;
-  	if(service.auth.type === 'credentials')
+  	if(service.auth.type === 'credentials'){
   		hdlr =credentialsHandler;
-  	else
+    }
+  	else{
   		hdlr = oauthHandler;
+    }
 
   	hdlr(function(auth){
       writeAuthentication(auth);
@@ -282,11 +296,12 @@ module.exports = function (grunt) {
     var done = this.async();
     var refresh = require('passport-oauth2-refresh');
     var provider = service.auth.authProvider;
+    var auth;
 
     try{
-      var auth = require('./'+AUTH_FILENAME);
+      auth = require('./'+AUTH_FILENAME);
     }catch(e){
-      grunt.fail.fatal("Unable to load existing authentication to refresh - please check you have an " + AUTH_FILENAME + " file in the root of your service");
+      grunt.fail.fatal('Unable to load existing authentication to refresh - please check you have an ' + AUTH_FILENAME + ' file in the root of your service');
     }
 
     var options = {
@@ -307,7 +322,7 @@ module.exports = function (grunt) {
 
     refresh.requestNewAccessToken(strategy.name,auth.access_token,function(err,accessToken,refreshToken){
       if(err){
-        grunt.fail.fatal("Generatring access token failed:" + err);
+        grunt.fail.fatal('Generatring access token failed:' + err);
       }
 
       if(typeof refreshToken !== 'undefined'){
@@ -322,5 +337,5 @@ module.exports = function (grunt) {
 
   grunt.registerTask('run',['auth:load','_run']);
   grunt.registerTask('test',['mochaTest']);
-  grunt.registerTask('default',['test','watch']);
+  grunt.registerTask('default',['jshint','test','watch']);
 };

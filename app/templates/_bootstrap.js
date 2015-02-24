@@ -1,12 +1,12 @@
-var chai = require('chai');
-  should = chai.should(),
-     sdk = require('flowxo-sdk')
+var chai = require('chai'),
+     sdk = require('flowxo-sdk'),
  service = require('../'),
   replay = require('replay');
 
 replay.fixtures = __dirname + '/fixtures';
 replay.mode = process.env.REPLAY || 'bloody';
 
+chai.should();
 chai.config.includeStack = true;
 
 global.expect = chai.expect;
@@ -21,6 +21,7 @@ try{
 	auth = {};
 }
 
+/* global service */
 global.service = service;
 global.runner = new sdk.ScriptRunner(service,{
 	auth: auth

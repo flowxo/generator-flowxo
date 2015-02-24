@@ -8,14 +8,7 @@ var chalk = require('chalk');
 var FlowXOUtils = require('../utils');
 
 var FlowXOMethodGenerator = module.exports = function FlowXOMethodGenerator(args, options) {
-
   yeoman.generators.NamedBase.apply(this,arguments);
-  // Greet the user
-  // console.log(FlowXOUtils.greeting);
-  // console.log(this,this.name);
-  // console.log(args);
-  // this.argument('methodName',{type: String, required: true});
-  // this.destinationRoot(path.join('methods',this.name));
 };
 
 util.inherits(FlowXOMethodGenerator,yeoman.generators.NamedBase);
