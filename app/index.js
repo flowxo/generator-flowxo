@@ -69,6 +69,7 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles(){
   this.template('_package.json','package.json');
   this.template('_Gruntfile.js','Gruntfile.js');
   this.template('_index.js','index.js');
+  this.template('_README.md','README.md');
   this.mkdir('methods');
   this.mkdir('tests');
   this.template('_bootstrap.js','tests/bootstrap.js');
