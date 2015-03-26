@@ -1,4 +1,5 @@
+'use strict';
 module.exports = function(options,done){
-	'use strict';
-	done(null);
+	done('Output Script Not Implemented');
+	
 };

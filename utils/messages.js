@@ -17,7 +17,7 @@ var oauthWhatNextMsg = [
   'What to do next',
   '---------------',
   indent + symbols.success + ' Implement your service logic inside index.js',
-  indent + symbols.success + ' Update your provider.js script',
+  indent + symbols.success + ' Update your auth.js script',
   indent + symbols.success + ' Scaffold methods with `yo flowxo:method`',
   indent + symbols.success + ' Create a test authentication with `grunt auth`',
   indent + symbols.success + ' Run tests with `grunt test`',

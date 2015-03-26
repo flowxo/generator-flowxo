@@ -7,12 +7,14 @@ module.exports = {
    * strategy: require('passport-facebook').Strategy
    */
   strategy: null/** UPDATE THIS **/,
-  name: '<%= slug %>',
+  type: 'oauth2',
   /*
    * The application ID and secret should be in the environment
    */
-  clientId: process.env.<%= slug.toUpperCase() %>_ID,
-  clientSecret: process.env.<%= slug.toUpperCase() %>_SECRET,
+   options:{
+    clientId: process.env.<%= slug.toUpperCase() %>_ID,
+    clientSecret: process.env.<%= slug.toUpperCase() %>_SECRET,
+  },
   /*
    * Any params here will be passed to the authentication request. Available parameters
    * will be documented by the service API. Common parameters are scope e.g.

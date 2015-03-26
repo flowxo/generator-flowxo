@@ -38,7 +38,7 @@ FlowXOGenerator.prototype.prompting = function(){
     self.auth = {
       type: props.auth_type
     };
-    self.serviceName = SERVICES_ROOT + self.name.toLowerCase();
+    self.serviceName = SERVICES_ROOT + _.kebabCase(self.name);
     self.destinationRoot(self.serviceName);
     done();
   });
@@ -78,7 +78,7 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles(){
 
 
   if(this.auth.type === 'oauth'){
-    this.template('_provider.js','provider.js');
+    this.template('_auth.js','auth.js');
   }else if(this.auth.type === 'credentials'){
     this.template('_ping.js','ping.js');
   }

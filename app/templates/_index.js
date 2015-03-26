@@ -4,11 +4,10 @@ var sdk = require('flowxo-sdk');
 var service = new sdk.Service({
 	serviceRoot: __dirname,
 	name: '<%= name %>',
-	slug: '<%= slug %>',
-	<% if(auth.type == 'oauth') { %>
+	slug: '<%= slug %>',<% if(auth.type == 'oauth') { %>
 	auth: {
 		type: 'oauth',
-		authProvider: require('./provider')
+		authProvider: require('./auth')
 	}
 	<% } else { %>
 	auth: {
@@ -21,9 +20,9 @@ var service = new sdk.Service({
 		  description: '<%= f.description %>',
 		  required: true
 		  },<% }); %>
-		]
-	}
-	<% } %>
+		],
+		ping: require('./ping')
+	}<% } %>
 });
 
 /*

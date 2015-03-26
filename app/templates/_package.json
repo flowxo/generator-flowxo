@@ -1,6 +1,6 @@
 {
   "name": "<%= serviceName %>",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "flowxo-sdk": "flowxo/flowxo-sdk"
@@ -23,10 +23,10 @@
     "open": "0.0.5",
     "passport": "^0.2.1",
     "passport-oauth2-refresh": "^0.3.0",
-    "replay": "git://github.com/joewoodhouse/node-replay"
+    "replay": "joewoodhouse/node-replay"
   },
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=0.12.0"
   },
   "scripts": {
     "test": "grunt test"
