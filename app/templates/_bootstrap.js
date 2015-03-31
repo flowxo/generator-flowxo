@@ -14,15 +14,15 @@ global.AssertionError = chai.AssertionError;
 global.Assertion = chai.Assertion;
 global.assert = chai.assert;
 
-var auth;
+var credentials;
 try{
-	auth = require('../auth');
+	credentials = require('../credentials');
 }catch(e){
-	auth = {};
+	credentials = {};
 }
 
 /* global service */
 global.service = service;
 global.runner = new sdk.ScriptRunner(service,{
-	auth: auth
+	credentials: credentials
 });

@@ -10,7 +10,7 @@ var chalk = require('chalk');
 /******************************************************************************
  * Global Vars
 ******************************************************************************/
-var AUTH_FILENAME = 'auth.json';
+var CREDENTIALS_FILENAME = 'credentials.json';
 var OAUTH_SERVER_PORT = 9000;
 
 module.exports = function (grunt) {
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
     // This will store the current state
     var state = {};
 
-    var runner = new SDK.ScriptRunner(service,{auth: grunt.auth});
+    var runner = new SDK.ScriptRunner(service,{auth: grunt.credentials});
 
     var runPrompts = [{
       type: 'expand',
@@ -275,7 +275,7 @@ module.exports = function (grunt) {
   };
 
   var writeAuthentication = function(auth){
-        fs.writeFileSync(AUTH_FILENAME,JSON.stringify(auth));
+        fs.writeFileSync(CREDENTIALS_FILENAME,JSON.stringify(auth));
   };
 
   grunt.registerTask('auth','Create an authentication',function(){
@@ -295,9 +295,9 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('auth:load',function(){
+  grunt.registerTask('credentials:load',function(){
     try{
-      grunt.auth = require('./'+AUTH_FILENAME);
+      grunt.credentials = require('./'+ CREDENTIALS_FILENAME);
     }catch(e){
 
     }
@@ -310,9 +310,9 @@ module.exports = function (grunt) {
     var auth;
 
     try{
-      auth = require('./'+AUTH_FILENAME);
+      auth = require('./'+CREDENTIALS_FILENAME);
     }catch(e){
-      grunt.fail.fatal('Unable to load existing authentication to refresh - please check you have an ' + AUTH_FILENAME + ' file in the root of your service');
+      grunt.fail.fatal('Unable to load existing authentication to refresh - please check you have an ' + CREDENTIALS_FILENAME + ' file in the root of your service');
     }
 
     var options = {
@@ -346,7 +346,7 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('run',['auth:load','_run']);
+  grunt.registerTask('run',['credentials:load','_run']);
   grunt.registerTask('test',['mochaTest']);
   grunt.registerTask('default',['jshint','test','watch']);
 };
