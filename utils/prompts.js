@@ -1,39 +1,39 @@
 var _ = require('lodash');
 
 module.exports = {
-	service: [
-	  // Service Name
-	  {
-	    type: 'input',
-	    name: 'name',
-	    message: 'What is the full name of your service (e.g. EchoSign or PipeDrive)?',
-	    default: this.service,
-	  },
+  service: [
+    // Service Name
+    {
+      type: 'input',
+      name: 'name',
+      message: 'What is the full name of your service (e.g. EchoSign or PipeDrive)?',
+      default: this.service,
+    },
 
-	  // Auth Type
-	  {
-	    type: 'list',
-	    name: 'auth_type',
-	    message: 'What sort of authentication does the service use?',
-	    choices: [
+    // Auth Type
+    {
+      type: 'list',
+      name: 'auth_type',
+      message: 'What sort of authentication does the service use?',
+      choices: [
         {name: 'Credentials (e.g. API Key or username/password)', value: 'credentials'},
-        {name: 'OAuth1', value: 'oauth1'},
+        // {name: 'OAuth1', value: 'oauth1'},
         {name: 'OAuth2', value: 'oauth2'},
-	      {name: 'OpenID', value: 'openid'},
-	    ],
-	    default: 0
-	  }
-	],
+        // {name: 'OpenID', value: 'openid'},
+      ],
+      default: 0
+    }
+  ],
 
-	oauth: [],
-	credentials: [
+  oauth: [],
+  credentials: [
     // Field Label
     {
       type: 'input',
       name: 'label',
       message: 'Credentials Field Label e.g. "API Key" or "Access Token"'
     },
-		// Field Type
+    // Field Type
     {
       type: 'list',
       name: 'type',
@@ -55,5 +55,5 @@ module.exports = {
       name: 'description',
       message: 'Credentials Field Description - the message describing the field to the end-user'
     }
-	]
+  ]
 };
