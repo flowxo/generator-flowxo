@@ -3,7 +3,7 @@ describe('<%= name %>',function(){
 	describe('Run Script',function(){
 		it('should have a working run script',function(done){
 			runner.run('<%= slug %>','run',{},function(err,output){
-				expect(err).to.be.undefined;
+				expect(err).to.be.null;
 				expect(output).to.be.a('object');
 				done();
 			});
@@ -13,22 +13,22 @@ describe('<%= name %>',function(){
 	describe('Custom Input Script',function(){
 		it('should have a working custom input script',function(done){
 			runner.run('<%= slug %>','input',{},function(err,output){
-				expect(err).to.be.undefined;
-				expect(output).to.be.a('object');
+				expect(err).to.be.null;
+				expect(output).to.be.a('array');
 				done();
 			});
 		});
-	});	
+	});
 <% } %>
 <% if (scripts.indexOf('output')!==-1) { %>
 	describe('Custom Output Script',function(){
 		it('should have a working custom output script',function(done){
 			runner.run('<%= slug %>','output',{},function(err,output){
-				expect(err).to.be.undefined;
-				expect(output).to.be.a('object');
+				expect(err).to.be.null;
+				expect(output).to.be.a('array');
 				done();
 			});
 		});
-	});	
+	});
 <% } %>
 });

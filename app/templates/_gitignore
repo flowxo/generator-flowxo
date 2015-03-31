@@ -1,3 +1,4 @@
 node_modules
-auth.json
+credentials.json
 tests/fixtures/
+.env

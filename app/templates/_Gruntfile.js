@@ -10,7 +10,7 @@ var chalk = require('chalk');
 /******************************************************************************
  * Global Vars
 ******************************************************************************/
-var CREDENTIALS_FILENAME = 'credentials.json';
+var CREDENTIALS_FILENAME = 'session.json';
 var OAUTH_SERVER_PORT = 9000;
 
 module.exports = function (grunt) {
@@ -20,6 +20,13 @@ module.exports = function (grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
+
+  // Credentials
+  try{
+    grunt.credentials = require('./'+CREDENTIALS_FILENAME);
+  }catch(e){
+    grunt.credentials = {};
+  }
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -59,7 +66,7 @@ module.exports = function (grunt) {
     }
   });
 
-  grunt.registerTask('_run','Run a service method',function(){
+  grunt.registerTask('run','Run a service method',function(){
     var done = this.async();
 
     // This will store the current state
@@ -118,6 +125,20 @@ module.exports = function (grunt) {
     };
 
     var doMethodPrompt = function(cb){
+
+      // If we have been passed it in the command-line
+      if(grunt.option('method')){
+        var slug = grunt.option('method');
+        for(var i = 0; i < service.methods.length; i++)
+        {
+          if(service.methods[i].slug === slug){
+            state.method = service.methods[i];
+            return doScriptPrompt(cb);
+          }
+        }
+        throw 'Unable to find method with slug ' + slug;
+      }
+
       // First we need them to choose the script
       var methodPrompt = [{
         type: 'list',
@@ -135,6 +156,17 @@ module.exports = function (grunt) {
     };
 
     var doScriptPrompt = function(cb){
+
+      if(grunt.option('script')){
+        var script = grunt.option('script');
+        if(state.method.scripts.hasOwnProperty(script)){
+          state.script = script;
+          return doFieldPrompt(cb);
+        }else{
+          throw 'Unable to find script ' + script + ' for method ' + state.method.slug;
+        }
+      }
+
       var scriptPrompt = [{
         type: 'list',
         name: 'script',
@@ -187,10 +219,12 @@ module.exports = function (grunt) {
 
   });
 
+  // Map of authentication type handlers
+  var authHandlers = {};
   /**
    * Handler for Credentials Authentication Types
    */
-  var credentialsHandler = function(cb){
+  authHandlers.credentials = function(cb){
     var prompts = service.auth.fields.map(function(f){
       var p = {
         name: f.key,
@@ -216,15 +250,14 @@ module.exports = function (grunt) {
   /**
    * Handler for OAuth Authentication Types
    */
-  var oauthHandler = function(cb){
+  authHandlers.oauth2 = function(cb){
         var open = require('open');
         var url = require('url');
         var passport = require('passport');
 
         var app = express();
-        var provider = service.auth.authProvider;
 
-        var name = provider.name;
+        var name = service.slug;
         var route = '/connect/' + name;
         var cbRoute = route + '/callback';
 
@@ -239,8 +272,8 @@ module.exports = function (grunt) {
         });
 
         var options = {
-          clientID: provider.clientId,
-          clientSecret: provider.clientSecret,
+          clientID: service.auth.options.clientID,
+          clientSecret: service.auth.options.clientSecret,
           callbackURL: callbackURL
         };
 
@@ -252,12 +285,13 @@ module.exports = function (grunt) {
           });
         };
 
-        var strategy = new provider.strategy(options,callback);
+        var strategy = new service.auth.strategy(options,callback);
 
         passport.use(name,strategy);
         app.use(passport.initialize());
 
-        app.get(route,passport.authorize(name,provider.params));
+        app.get(route,passport.authorize(name,service.auth.params));
+
         app.get(cbRoute,passport.authorize(name),function(req,res){
           res.status(200).send('Thankyou. You may now close this window.');
           cb(req.account);
@@ -274,50 +308,32 @@ module.exports = function (grunt) {
         open(userUrl);
   };
 
-  var writeAuthentication = function(auth){
-        fs.writeFileSync(CREDENTIALS_FILENAME,JSON.stringify(auth));
+  var storeCredentials = function(credentials){
+    grunt.credentials = credentials;
+    fs.writeFileSync(CREDENTIALS_FILENAME,JSON.stringify(grunt.credentials));
   };
 
   grunt.registerTask('auth','Create an authentication',function(){
     var done = this.async();
 
-    var hdlr;
-    if(service.auth.type === 'credentials'){
-      hdlr =credentialsHandler;
-    }
-    else{
-      hdlr = oauthHandler;
-    }
-
+    var hdlr = authHandlers[service.auth.type];
     hdlr(function(auth){
-      writeAuthentication(auth);
+      storeCredentials(auth);
       done();
     });
-  });
-
-  grunt.registerTask('credentials:load',function(){
-    try{
-      grunt.credentials = require('./'+ CREDENTIALS_FILENAME);
-    }catch(e){
-
-    }
   });
 
   grunt.registerTask('auth:refresh','Refresh an access token',function(){
     var done = this.async();
     var refresh = require('passport-oauth2-refresh');
-    var provider = service.auth.authProvider;
-    var auth;
 
-    try{
-      auth = require('./'+CREDENTIALS_FILENAME);
-    }catch(e){
+    if(!grunt.credentials){
       grunt.fail.fatal('Unable to load existing authentication to refresh - please check you have an ' + CREDENTIALS_FILENAME + ' file in the root of your service');
     }
 
     var options = {
-      clientID: provider.clientId,
-      clientSecret: provider.clientSecret,
+      clientID: service.auth.options.clientID,
+      clientSecret: service.auth.options.clientSecret,
     };
 
     var callback = function(access_token, refresh_token, profile, done){
@@ -328,25 +344,24 @@ module.exports = function (grunt) {
       });
     };
 
-    var strategy = new provider.strategy(options,callback);
+    var strategy = new service.auth.strategy(options,callback);
     refresh.use(strategy);
 
-    refresh.requestNewAccessToken(strategy.name,auth.access_token,function(err,accessToken,refreshToken){
+    refresh.requestNewAccessToken(strategy.name,grunt.credentials.access_token,function(err,accessToken,refreshToken){
       if(err){
         grunt.fail.fatal('Generatring access token failed:' + err);
       }
 
       if(typeof refreshToken !== 'undefined'){
-        auth.refresh_token = refreshToken;
+        grunt.session.credentials.refresh_token = refreshToken;
       }
 
-      auth.access_token = accessToken;
-      writeAuthentication(auth);
+      grunt.credentials.access_token = accessToken;
+      storeCredentials(grunt.credentials);
       done();
     });
   });
 
-  grunt.registerTask('run',['credentials:load','_run']);
   grunt.registerTask('test',['mochaTest']);
   grunt.registerTask('default',['jshint','test','watch']);
 };
