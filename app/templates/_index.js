@@ -7,7 +7,6 @@ var service = new sdk.Service({
   slug: '<%= slug %>',<% if(auth.type == 'credentials') { %>
   auth: {
     type: 'credentials',
-    authProvider: require('./auth'),
     fields: [
       <% _.each(auth.fields,function(f){ %>{
       type: '<%= f.type %>',
