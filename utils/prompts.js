@@ -16,17 +16,12 @@ module.exports = {
 	    name: 'auth_type',
 	    message: 'What sort of authentication does the service use?',
 	    choices: [
-	      'Credentials (e.g. API Key or username/password)',
-	      'OAuth'
+        {name: 'Credentials (e.g. API Key or username/password)', value: 'credentials'},
+        {name: 'OAuth1', value: 'oauth1'},
+        {name: 'OAuth2', value: 'oauth2'},
+	      {name: 'OpenID', value: 'openid'},
 	    ],
-	    default: 0,
-	    filter: function(val){
-	      if(val.indexOf('Credentials') === 0){
-	        return 'credentials'
-	      }else{
-	        return 'oauth';
-	      }
-	    }
+	    default: 0
 	  }
 	],
 

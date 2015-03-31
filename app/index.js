@@ -49,17 +49,14 @@ FlowXOGenerator.prototype.authPrompting = function authPrompting(){
   var done = this.async();
   var self = this;
 
-  var prompts;
-  if(this.auth.type === 'oauth'){
-    this.auth.strategy = '';
-    this.auth.params = {};
-    done();
-  }else if(this.auth.type === 'credentials'){
+  if(this.auth.type === 'credentials'){
     this.log(chalk.bgGreen("You now need to define the necessary credential fields for the service connection."));
     FlowXOUtils.promptUtils.repeatedPrompt.call(this,'field',FlowXOUtils.prompts.credentials,function(fields){
       self.auth.fields = fields;
       done();
     });
+  }else{
+    done();
   }
 };
 
@@ -76,10 +73,7 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles(){
   this.template('_service.spec.js','tests/service.spec.js');
   this.template('_jshintrc_test','tests/.jshintrc');
 
-
-  if(this.auth.type === 'oauth'){
-    this.template('_auth.js','auth.js');
-  }else if(this.auth.type === 'credentials'){
+  if(this.auth.type === 'credentials'){
     this.template('_ping.js','ping.js');
   }
 };
