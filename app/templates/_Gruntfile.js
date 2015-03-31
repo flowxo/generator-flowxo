@@ -23,28 +23,28 @@ module.exports = function (grunt) {
 
   // Define the configuration for all the tasks
   grunt.initConfig({
-  	mochaTest:{
-  		test:{
-  			options:{
-  				reporter: 'spec',
-  				quiet: false,
-  				clearRequireCache: false,
-  				require: './tests/bootstrap'
-  			},
-  			src: ['tests/**/*.spec.js']
-  		}
-  	},
-  	watch:{
-  		js:{
-  			options:{
-  				spawn: true,
-  				interrupt: false,
-  				debounceDelay: 250
-  			},
-  			files: ['index.js','methods/**/*.js','tests/**/*.spec.js'],
-  			tasks: ['jshint','test']
-  		}
-  	},
+    mochaTest:{
+      test:{
+        options:{
+          reporter: 'spec',
+          quiet: false,
+          clearRequireCache: false,
+          require: './tests/bootstrap'
+        },
+        src: ['tests/**/*.spec.js']
+      }
+    },
+    watch:{
+      js:{
+        options:{
+          spawn: true,
+          interrupt: false,
+          debounceDelay: 250
+        },
+        files: ['index.js','methods/**/*.js','tests/**/*.spec.js'],
+        tasks: ['jshint','test']
+      }
+    },
     jshint:{
       options:{
         jshintrc: true,
@@ -191,26 +191,26 @@ module.exports = function (grunt) {
    * Handler for Credentials Authentication Types
    */
   var credentialsHandler = function(cb){
-  	var prompts = service.auth.fields.map(function(f){
-  		var p = {
-  			name: f.key,
-  			message: f.label
-  		};
+    var prompts = service.auth.fields.map(function(f){
+      var p = {
+        name: f.key,
+        message: f.label
+      };
 
-  		if(f.type === 'text'){
-  			p.type = 'input';
-  		}else if(f.type === 'select'){
-  			p.type = 'list';
-  			p.choices = f.input_options.map(function(i){
-  				return {name: i.label, value: i.value};
-  			});
-  		}
-  		return p;
-  	});
+      if(f.type === 'text'){
+        p.type = 'input';
+      }else if(f.type === 'select'){
+        p.type = 'list';
+        p.choices = f.input_options.map(function(i){
+          return {name: i.label, value: i.value};
+        });
+      }
+      return p;
+    });
 
-  	inquirer.prompt(prompts,function(answers){
-  		cb(answers);
-  	});
+    inquirer.prompt(prompts,function(answers){
+      cb(answers);
+    });
   };
 
   /**
@@ -279,17 +279,17 @@ module.exports = function (grunt) {
   };
 
   grunt.registerTask('auth','Create an authentication',function(){
-  	var done = this.async();
+    var done = this.async();
 
-  	var hdlr;
-  	if(service.auth.type === 'credentials'){
-  		hdlr =credentialsHandler;
+    var hdlr;
+    if(service.auth.type === 'credentials'){
+      hdlr =credentialsHandler;
     }
-  	else{
-  		hdlr = oauthHandler;
+    else{
+      hdlr = oauthHandler;
     }
 
-  	hdlr(function(auth){
+    hdlr(function(auth){
       writeAuthentication(auth);
       done();
     });
