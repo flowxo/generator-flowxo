@@ -3,10 +3,7 @@ flowxo-generator
 
 ## Quick Install (local install)
 ```
-git clone git@github.com:flowxo/flowxo-generator.git
-cd flowxo-generator
-npm install
-npm link
+npm install flowxo/flowxo-generator
 ```
 
 ## Usage
