@@ -1,28 +1,17 @@
-var chai = require('chai'),
-     sdk = require('flowxo-sdk'),
- service = require('../'),
-  replay = require('replay');
+'use strict';
+var  sdk = require('flowxo-sdk'),
+ service = require('../');
 
-replay.fixtures = __dirname + '/fixtures';
-replay.mode = process.env.REPLAY || 'bloody';
-
-chai.should();
-chai.config.includeStack = true;
-
-global.expect = chai.expect;
-global.AssertionError = chai.AssertionError;
-global.Assertion = chai.Assertion;
-global.assert = chai.assert;
-
-var credentials;
+var credentials = {};
 try{
-	credentials = require('../credentials');
+  credentials = require('../credentials');
 }catch(e){
-	credentials = {};
 }
 
-/* global service */
-global.service = service;
-global.runner = new sdk.ScriptRunner(service,{
-	credentials: credentials
+beforeEach(function(){
+  this.service = service;
+  this.credentials = credentials;
+  this.runner = new sdk.ScriptRunner(service,{
+    credentials: credentials
+  });
 });

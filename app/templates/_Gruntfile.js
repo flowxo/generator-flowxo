@@ -39,9 +39,9 @@ module.exports = function (grunt) {
           reporter: 'spec',
           quiet: false,
           clearRequireCache: false,
-          require: './tests/bootstrap'
+          require: './tests/helpers'
         },
-        src: ['tests/**/*.spec.js']
+        src: ['tests/bootstrap.js','tests/**/*.spec.js']
       }
     },
     watch:{

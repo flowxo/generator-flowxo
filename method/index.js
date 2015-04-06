@@ -61,11 +61,6 @@ FlowXOMethodGenerator.prototype.prompts = function prompts(){
       name: 'scripts',
       message: 'Select which scripts you would like to generate for the method.',
       choices: [{
-        name: 'Run',
-        value: 'run',
-        checked: true,
-        disabled: true
-      },{
         name: 'Custom Input',
         value: 'input',
       },{
