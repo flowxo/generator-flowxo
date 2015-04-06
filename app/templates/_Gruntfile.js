@@ -10,7 +10,7 @@ var chalk = require('chalk');
 /******************************************************************************
  * Global Vars
 ******************************************************************************/
-var CREDENTIALS_FILENAME = 'session.json';
+var CREDENTIALS_FILENAME = 'credentials.json';
 var OAUTH_SERVER_PORT = 9000;
 
 module.exports = function (grunt) {
@@ -30,6 +30,9 @@ module.exports = function (grunt) {
 
   // Define the configuration for all the tasks
   grunt.initConfig({
+    env:{
+      src: '.env'
+    },
     mochaTest:{
       test:{
         options:{
@@ -72,7 +75,7 @@ module.exports = function (grunt) {
     // This will store the current state
     var state = {};
 
-    var runner = new SDK.ScriptRunner(service,{auth: grunt.credentials});
+    var runner = new SDK.ScriptRunner(service,{credentials: grunt.credentials});
 
     var runPrompts = [{
       type: 'expand',
@@ -353,7 +356,7 @@ module.exports = function (grunt) {
       }
 
       if(typeof refreshToken !== 'undefined'){
-        grunt.session.credentials.refresh_token = refreshToken;
+        grunt.credentials.refresh_token = refreshToken;
       }
 
       grunt.credentials.access_token = accessToken;
@@ -362,6 +365,6 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('test',['mochaTest']);
-  grunt.registerTask('default',['jshint','test','watch']);
+  grunt.registerTask('test',['env','mochaTest']);
+  grunt.registerTask('default',['env','jshint','test','watch']);
 };
