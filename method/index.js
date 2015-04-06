@@ -1,19 +1,16 @@
 'use strict';
 var util = require('util');
-var fs = require('fs');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 var _ = require('lodash');
-var chalk = require('chalk');
-var FlowXOUtils = require('../utils');
 
-var FlowXOMethodGenerator = module.exports = function FlowXOMethodGenerator(args, options) {
+var FlowXOMethodGenerator = module.exports = function FlowXOMethodGenerator() {
   yeoman.generators.Base.apply(this,arguments);
 };
 
 util.inherits(FlowXOMethodGenerator,yeoman.generators.Base);
 
-FlowXOMethodGenerator.prototype.prompts = function prompts(){
+FlowXOMethodGenerator.prototype.prompts = function (){
   var done = this.async();
   var self = this;
 
@@ -21,9 +18,9 @@ FlowXOMethodGenerator.prototype.prompts = function prompts(){
     _.assign(self,props);
 
     if(props.type === 'action'){
-      self.kind = 'task'
+      self.kind = 'task';
     }else{
-      self.kind = 'trigger'
+      self.kind = 'trigger';
     }
     done();
   };
@@ -50,9 +47,9 @@ FlowXOMethodGenerator.prototype.prompts = function prompts(){
       type: 'list',
       name: 'type',
       message: 'What type of method is it?',
-      choices: ['Poller','Action'],
+      choices: ['Action','Poller'],
       filter: function(val){
-        return val.toLowerCase()
+        return val.toLowerCase();
       }
     },
     // Scripts

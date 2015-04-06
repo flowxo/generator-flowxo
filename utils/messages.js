@@ -16,6 +16,7 @@ var credentialsWhatNextMsg = [
 var oauthWhatNextMsg = [
   'What to do next',
   '---------------',
+  indent + symbols.success + ' Implement your authentication inside index.js',
   indent + symbols.success + ' Implement your service logic inside index.js',
   indent + symbols.success + ' Update your auth.js script',
   indent + symbols.success + ' Scaffold methods with `yo flowxo:method`',
@@ -28,7 +29,8 @@ var oauthWhatNextMsg = [
 module.exports = {
   welcome: 'Welcome to the FlowXO Service generator.',
   whatNext:{
-    oauth: oauthWhatNextMsg,
+    oauth1: oauthWhatNextMsg,
+    oauth2: oauthWhatNextMsg,
     credentials: credentialsWhatNextMsg
   }
 };

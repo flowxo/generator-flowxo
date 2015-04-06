@@ -17,7 +17,7 @@ module.exports = {
       message: 'What sort of authentication does the service use?',
       choices: [
         {name: 'Credentials (e.g. API Key or username/password)', value: 'credentials'},
-        // {name: 'OAuth1', value: 'oauth1'},
+        {name: 'OAuth1', value: 'oauth1'},
         {name: 'OAuth2', value: 'oauth2'},
         // {name: 'OpenID', value: 'openid'},
       ],

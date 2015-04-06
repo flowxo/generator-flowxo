@@ -1,6 +1,5 @@
 'use strict';
 var util = require('util');
-var fs = require('fs');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 var _ = require('lodash');
@@ -11,7 +10,7 @@ var SERVICES_ROOT = 'flowxo-services-';
 
 
 
-var FlowXOGenerator = module.exports = function FlowXOGenerator(args, options) {
+var FlowXOGenerator = module.exports = function FlowXOGenerator() {
   yeoman.generators.Base.apply(this,arguments);
   // Greet the user
   console.log(FlowXOUtils.greeting);
@@ -50,7 +49,7 @@ FlowXOGenerator.prototype.authPrompting = function authPrompting(){
   var self = this;
 
   if(this.auth.type === 'credentials'){
-    this.log(chalk.bgGreen("You now need to define the necessary credential fields for the service connection."));
+    this.log(chalk.bgGreen('You now need to define the necessary credential fields for the service connection.'));
     FlowXOUtils.promptUtils.repeatedPrompt.call(this,'field',FlowXOUtils.prompts.credentials,function(fields){
       self.auth.fields = fields;
       done();
