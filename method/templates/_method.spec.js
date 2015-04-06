@@ -3,8 +3,9 @@ describe('<%= name %>',function(){
   describe('Run Script',function(){
     it('should have a working run script',function(done){
       this.runner.run('<%= slug %>','run',{},function(err,output){
-        expect(err).to.be.null;
-        expect(output).to.be.a('object');
+        expect(err).to.be.null;<% if(type === 'poller') { %>
+        expect(output).to.be.an('array'); <% } else { %>
+        expect(output).to.be.an('object'); <% } %>
         done();
       });
     });
