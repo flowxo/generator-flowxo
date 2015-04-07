@@ -5,6 +5,7 @@
   "dependencies": {
     "flowxo-sdk": "flowxo/flowxo-sdk"
   },
+  "main": "index.js",
   "devDependencies": {
     "grunt": "^0.4.5",
     "load-grunt-tasks": "^3.1.0",
@@ -14,22 +15,29 @@
     "grunt-env": "^0.4.2",
     "grunt-mocha-test": "^0.12.7",
     "grunt-env": "^0.4.4",
-    "chai": "^1.10.0",
-    "chalk": "^0.5.1",
+    "chai": "^2.2.0",
+    "sinon": "^1.14.1",
+    "sinon-chai": "^2.7.0",
+    "chalk": "^1.0.0",
     "mocha": "^2.1.0",
     "inquirer": "^0.8.0",
     "jshint-stylish": "^1.0.0",
     "express": "^4.11.2",
-    "grant": "^2.0.0",
     "open": "0.0.5",
     "passport": "^0.2.1",
-    "passport-oauth2-refresh": "^0.3.0",
-    "replay": "joewoodhouse/node-replay"
+    "passport-oauth2-refresh": "^0.4.0"
   },
   "engines": {
     "node": ">=0.12.0"
   },
   "scripts": {
     "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://bitbucket.org/flowxo/<%= serviceName %>"
+  },
+  "bugs": {
+    "url": "https://bitbucket.org/flowxo/<%= serviceName %>/issues"
   }
 }
