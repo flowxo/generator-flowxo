@@ -32,17 +32,30 @@ var service = new sdk.Service({
     strategy: null,
 
     // These options will be passed to the strategy when registering
-    // For example, for OAuth2 the options could be
-    // options:{
-    //   clientID: process.env.MY_SERVICE_ID,
-    //   clientSecret: process.env.MY_SERVICE_SECRET
-    // }
+    // For example, for OAuth 2.0 the options could be
+    //
+    //   options:{
+    //     clientID: process.env.MY_SERVICE_ID,
+    //     clientSecret: process.env.MY_SERVICE_SECRET
+    //   }
+    //
+    // ...and for OAuth 1.0 ...
+    //
+    //   options:{
+    //     consumerKey: process.env.TRELLO_ID,
+    //     consumerSecret: process.env.TRELLO_SECRET,
+    //     trelloParams: {
+    //       scope: 'read,write',
+    //       name: 'Flow XO',
+    //       expiration: 'never'
+    //     }
+    //   }
     options: {
 
     },
 
     // Authentication parameters to be used.
-    // For example where an OAuth2 API defines access scopes,
+    // For example where an OAuth 2.0 API defines access scopes,
     // you may send
     // params:{
     //   scope: ['allow_email']
