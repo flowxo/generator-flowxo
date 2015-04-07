@@ -5,7 +5,6 @@ var config = {
 	slug: '<%= slug %>',
 	type: '<%= type %>',
 	kind: '<%= kind %>',
-	deprecated: false,
 	scripts:{ <% if(scripts.indexOf('input')!==-1){ %>
 		input: require('./input'), <% } %><% if(scripts.indexOf('output')!==-1){%>
 		output: require('./output'), <% } %>
