@@ -316,7 +316,7 @@ module.exports = function (grunt) {
     fs.writeFileSync(CREDENTIALS_FILENAME,JSON.stringify(grunt.credentials));
   };
 
-  grunt.registerTask('auth','Create an authentication',function(){
+  grunt.registerTask('authTask','Create an authentication',function(){
     var done = this.async();
 
     var hdlr = authHandlers[service.auth.type];
@@ -326,7 +326,7 @@ module.exports = function (grunt) {
     });
   });
 
-  grunt.registerTask('auth:refresh','Refresh an access token',function(){
+  grunt.registerTask('authRefreshTask','Refresh an access token',function(){
     var done = this.async();
     var refresh = require('passport-oauth2-refresh');
 
@@ -365,6 +365,8 @@ module.exports = function (grunt) {
     });
   });
 
+  grunt.registerTask('auth:refresh',['env','authRefreshTask']);
+  grunt.registerTask('auth',['env','authTask']);
   grunt.registerTask('test',['env','mochaTest']);
   grunt.registerTask('default',['env','jshint','test','watch']);
 };

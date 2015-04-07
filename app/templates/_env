@@ -1,0 +1,3 @@
+<% if(auth.type.indexOf('oauth')===0) { %>BASE_URL=http://localhost:9000
+<%= slug.toUpperCase() %>_KEY=
+<%= slug.toUpperCase()%>_SECRET=<% } %>
