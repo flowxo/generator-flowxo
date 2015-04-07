@@ -15,7 +15,7 @@ describe('<%= name %>',function(){
     it('should have a working custom input script',function(done){
       this.runner.run('<%= slug %>','input',{},function(err,output){
         expect(err).to.be.null;
-        expect(output).to.be.a('array');
+        expect(output).to.be.an('array');
         done();
       });
     });
@@ -26,7 +26,7 @@ describe('<%= name %>',function(){
     it('should have a working custom output script',function(done){
       this.runner.run('<%= slug %>','output',{},function(err,output){
         expect(err).to.be.null;
-        expect(output).to.be.a('array');
+        expect(output).to.be.an('array');
         done();
       });
     });
