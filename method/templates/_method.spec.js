@@ -3,7 +3,7 @@ describe('<%= name %>',function(){
   describe('Run Script',function(){
     it('should have a working run script',function(done){
       this.runner.run('<%= slug %>','run',{},function(err,output){
-        expect(err).to.be.null;<% if(type === 'poller') { %>
+        expect(err).not.to.exist;<% if(type === 'poller') { %>
         expect(output).to.be.an('array'); <% } else { %>
         expect(output).to.be.an('object'); <% } %>
         done();
@@ -14,7 +14,7 @@ describe('<%= name %>',function(){
   describe('Custom Input Script',function(){
     it('should have a working custom input script',function(done){
       this.runner.run('<%= slug %>','input',{},function(err,output){
-        expect(err).to.be.null;
+        expect(err).not.to.exist;
         expect(output).to.be.an('array');
         done();
       });
@@ -25,7 +25,7 @@ describe('<%= name %>',function(){
   describe('Custom Output Script',function(){
     it('should have a working custom output script',function(done){
       this.runner.run('<%= slug %>','output',{},function(err,output){
-        expect(err).to.be.null;
+        expect(err).not.to.exist;
         expect(output).to.be.an('array');
         done();
       });
