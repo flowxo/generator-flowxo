@@ -3,7 +3,7 @@ flowxo-generator
 
 ## Quick Install (local install)
 ```
-npm install flowxo/flowxo-generator
+npm install -g flowxo/flowxo-generator
 ```
 
 ## Usage
