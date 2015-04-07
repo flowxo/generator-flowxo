@@ -1,7 +1,10 @@
 var chai = require('chai');
 var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
+var sdk = require('flowxo-sdk');
+
 chai.use(sinonChai);
+chai.use(sdk.Chai);
 
 chai.should();
 chai.config.includeStack = true;

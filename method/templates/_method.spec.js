@@ -1,5 +1,10 @@
 'use strict';
 describe('<%= name %>',function(){
+  describe('Configuration',function(){
+    var method = this.service.getMethod('<%= slug %>');
+    expect(method).to.be.flowxo.method;
+  });
+
   describe('Run Script',function(){
     it('should have a working run script',function(done){
       this.runner.run('<%= slug %>','run',{},function(err,output){
