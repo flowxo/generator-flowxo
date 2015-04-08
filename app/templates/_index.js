@@ -1,10 +1,11 @@
 'use strict';
 
 var sdk = require('flowxo-sdk');
+
 var service = new sdk.Service({
   serviceRoot: __dirname,
   name: '<%= name %>',
-  slug: '<%= slug %>',<% if(auth.type == 'credentials') { %>
+  slug: '<%= slug %>',<% if(auth.type === 'credentials') { %>
   auth: {
     type: 'credentials',
     fields: [
@@ -42,7 +43,7 @@ var service = new sdk.Service({
     // ...and for OAuth 1.0 ...
     //
     //   options:{
-    //     consumerKey: process.env.TRELLO_ID,
+    //     consumerKey: process.env.TRELLO_KEY,
     //     consumerSecret: process.env.TRELLO_SECRET,
     //     trelloParams: {
     //       scope: 'read,write',
@@ -51,7 +52,13 @@ var service = new sdk.Service({
     //     }
     //   }
     options: {
-
+      <% if(auth.type === 'oauth1') { %>
+        consumerKey: process.env.<%= slug.toUpperCase()%>_KEY,
+        consumerSecret: process.env.<%= slug.toUpperCase()%>_SECRET
+      <% } else if (auth.type === 'oauth2') { %>
+        clientID: process.env.<%= slug.toUpperCase()%>_ID,
+        clientSecret: process.env.<%= slug.toUpperCase()%>_SECRET
+      <% } %>
     },
 
     // Authentication parameters to be used.
@@ -68,13 +75,13 @@ var service = new sdk.Service({
 });
 
 /*
- Attach any service level methods to your service here, for example
+  Attach any service level methods to your service here, for example
+    service.request = function(options){
+      //...
+    }
 
-   service.request = function(options){
-  //...
-   }
- then in your methods you'll be able to do
-
-   this.request({id: 123});
+  then in your methods you'll be able to do
+    this.request({id: 123});
 */
+
 module.exports = service;

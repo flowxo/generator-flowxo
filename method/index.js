@@ -72,9 +72,6 @@ FlowXOMethodGenerator.prototype.prompts = function (){
 
 FlowXOMethodGenerator.prototype.fieldPrompts = function fieldPrompts(){
   var done = this.async();
-
-
-
   done();
 };
 

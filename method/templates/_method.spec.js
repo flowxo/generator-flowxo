@@ -1,8 +1,9 @@
 'use strict';
+
 describe('<%= name %>',function(){
   describe('Configuration',function(){
     var method = this.service.getMethod('<%= slug %>');
-    expect(method).to.be.flowxo.method;
+    expect(method).to.be.a.flowxo.method;
   });
 
   describe('Run Script',function(){
@@ -14,8 +15,8 @@ describe('<%= name %>',function(){
         done();
       });
     });
-  });
-<% if (scripts.indexOf('input')!==-1) { %>
+  });<% if (scripts.indexOf('input')!==-1) { %>
+
   describe('Custom Input Script',function(){
     it('should have a working custom input script',function(done){
       this.runner.run('<%= slug %>','input',{},function(err,output){
@@ -24,9 +25,8 @@ describe('<%= name %>',function(){
         done();
       });
     });
-  });
-<% } %>
-<% if (scripts.indexOf('output')!==-1) { %>
+  });<% } if (scripts.indexOf('output')!==-1) { %>
+
   describe('Custom Output Script',function(){
     it('should have a working custom output script',function(done){
       this.runner.run('<%= slug %>','output',{},function(err,output){
@@ -35,6 +35,5 @@ describe('<%= name %>',function(){
         done();
       });
     });
-  });
-<% } %>
+  });<% } %>
 });

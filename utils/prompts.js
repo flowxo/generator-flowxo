@@ -17,8 +17,8 @@ module.exports = {
       message: 'What sort of authentication does the service use?',
       choices: [
         {name: 'Credentials (e.g. API Key or username/password)', value: 'credentials'},
-        {name: 'OAuth 1.0', value: 'oauth1'},
-        {name: 'OAuth 2.0', value: 'oauth2'},
+        {name: 'OAuth 1', value: 'oauth1'},
+        {name: 'OAuth 2', value: 'oauth2'},
         // {name: 'OpenID', value: 'openid'},
       ],
       default: 0
@@ -45,9 +45,9 @@ module.exports = {
       type: 'input',
       name: 'key',
       default: function(answers){
-        return _.snakeCase(answers.label)
+        return _.snakeCase(answers.label);
       },
-      message: 'Credentials Field Key e.g. apikey or auth_token, used by your scripts'
+      message: 'Credentials Field Key e.g. api_key or auth_token, used by your scripts'
     },
     // Field Description
     {
