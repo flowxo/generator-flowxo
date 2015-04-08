@@ -278,7 +278,13 @@ module.exports = function(grunt) {
     });
 
     inquirer.prompt(prompts, function(answers) {
-      cb(answers);
+      // Ping the endpoint to ensure the credentials are valid
+      service.runScript('ping', { credentials: answers }, function(err) {
+        if(err) {
+          grunt.fail.fatal('Invalid credentials: ' + err);
+        }
+        cb(answers);
+      });
     });
   };
 
