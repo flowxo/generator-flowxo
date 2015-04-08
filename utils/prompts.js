@@ -8,6 +8,9 @@ module.exports = {
       name: 'name',
       message: 'What is the full name of your service (e.g. EchoSign or PipeDrive)?',
       default: this.service,
+      validate: function(input) {
+        return !!input;
+      }
     },
 
     // Auth Type
@@ -21,7 +24,10 @@ module.exports = {
         {name: 'OAuth 2', value: 'oauth2'},
         // {name: 'OpenID', value: 'openid'},
       ],
-      default: 0
+      default: 0,
+      validate: function(input) {
+        return !!input;
+      }
     }
   ],
 
