@@ -1,9 +1,9 @@
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
 var express = require('express');
+var _ = require('lodash');
 var inquirer = require('inquirer');
 var fs = require('fs');
-var service = require('./');
 var SDK = require('flowxo-sdk');
 var chalk = require('chalk');
 
@@ -70,6 +70,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('run', 'Run a service method', function() {
+    var service = require('./');
     var done = this.async();
 
     // This will store the current state
@@ -231,7 +232,7 @@ module.exports = function(grunt) {
 
   });
 
-  var getStrategy = function(options, callback) {
+  var getStrategy = function(service, options, callback) {
     if(!service.auth.strategy) {
       grunt.fail.fatal('Unable to load strategy - please check you have defined a valid strategy in your `index.js` file');
     }
@@ -244,7 +245,7 @@ module.exports = function(grunt) {
   /**
    * Handler for Credentials Authentication Types
    */
-  authHandlers.credentials = function(cb) {
+  authHandlers.credentials = function(service, cb) {
     var prompts = service.auth.fields.map(function(f) {
       var p = {
         name: f.key,
@@ -270,10 +271,14 @@ module.exports = function(grunt) {
     });
   };
 
+  authHandlers.oauth1 = function(service, cb) {
+    grunt.fail.fatal('Oauth 1 not yet implemented');
+  };
+
   /**
-   * Handler for OAuth Authentication Types
+   * Handler for OAuth2
    */
-  authHandlers.oauth2 = function(cb) {
+  authHandlers.oauth2 = function(service, cb) {
     var open = require('open');
     var url = require('url');
     var passport = require('passport');
@@ -281,7 +286,7 @@ module.exports = function(grunt) {
     var app = express();
 
     var name = service.slug;
-    var route = '/connect/' + name;
+    var route = '/auth/service/' + name;
     var cbRoute = route + '/callback';
 
     // Calculate the callbackURL for the request
@@ -294,11 +299,8 @@ module.exports = function(grunt) {
       pathname: cbRoute
     });
 
-    var options = {
-      clientID: service.auth.options.clientID,
-      clientSecret: service.auth.options.clientSecret,
-      callbackURL: callbackURL
-    };
+    var options = _.clone(service.auth.options);
+    options.callbackURL = callbackURL;
 
     var callback = function(access_token, refresh_token, profile, done) {
       done(null, {
@@ -308,7 +310,7 @@ module.exports = function(grunt) {
       });
     };
 
-    var strategy = getStrategy(options, callback);
+    var strategy = getStrategy(service, options, callback);
 
     passport.use(name, strategy);
     app.use(passport.initialize());
@@ -316,7 +318,7 @@ module.exports = function(grunt) {
     app.get(route, passport.authorize(name, service.auth.params));
 
     app.get(cbRoute, passport.authorize(name), function(req, res) {
-      res.status(200).send('Thankyou. You may now close this window.');
+      res.status(200).send('Thank you. You may now close this window.');
       cb(req.account);
     });
 
@@ -338,16 +340,18 @@ module.exports = function(grunt) {
   };
 
   grunt.registerTask('authTask', 'Create an authentication', function() {
+    var service = require('./');
     var done = this.async();
 
     var hdlr = authHandlers[service.auth.type];
-    hdlr(function(auth) {
+    hdlr(service, function(auth) {
       storeCredentials(auth);
       done();
     });
   });
 
   grunt.registerTask('authRefreshTask', 'Refresh an access token', function() {
+    var service = require('./');
     var done = this.async();
     var refresh = require('passport-oauth2-refresh');
 
@@ -368,7 +372,7 @@ module.exports = function(grunt) {
       });
     };
 
-    var strategy = getStrategy(options, callback);
+    var strategy = getStrategy(service, options, callback);
     refresh.use(strategy);
 
     refresh.requestNewAccessToken(strategy.name, grunt.credentials.access_token, function(err, accessToken, refreshToken) {
