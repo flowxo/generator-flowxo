@@ -8,28 +8,25 @@ var service = new sdk.Service({
   slug: '<%= slug %>',<% if(auth.type === 'credentials') { %>
   auth: {
     type: 'credentials',
-    fields: [
-      <% _.each(auth.fields,function(f){ %>{
+    fields: [<% auth.fields.forEach(function(f, i) { %>{
       type: '<%= f.type %>',
       key: '<%= f.key %>',
       label: '<%= f.label %>',
       description: '<%= f.description %>',
       required: true
-      },<% }); %>
-    ]
+    }<% if(i < (auth.fields.length-1)) { %>,<% } %><% }); %>]
   },
   scripts:{
     ping: require('./ping')
   }<% } else { %>
   auth: {
     type: '<%= auth.type %>',
-    /*
-     * The strategy key should return the Passport Strategy for your service.
-     * Passport has numerous available strategies for popular services, normally named
-     * e.g. passport-facebook, passport-twitter etc
-     * Example:
-     * strategy: require('passport-facebook').Strategy
-     */
+
+    // The strategy key should return the Passport Strategy for your service.
+    // Passport has numerous available strategies for popular services, normally named
+    // e.g. passport-facebook, passport-twitter etc
+    // Example:
+    // strategy: require('passport-facebook').Strategy
     strategy: null,
 
     // These options will be passed to the strategy when registering.
@@ -49,7 +46,8 @@ var service = new sdk.Service({
     // add them below.
     options: {
       clientID: process.env.<%= slug.toUpperCase()%>_ID,
-      clientSecret: process.env.<%= slug.toUpperCase()%>_SECRET
+      clientSecret: process.env.<%= slug.toUpperCase()%>_SECRET,
+      state: true
     },
     <% } %>
     // Authentication parameters to be used.

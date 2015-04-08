@@ -31,14 +31,20 @@ module.exports = {
     {
       type: 'input',
       name: 'label',
-      message: 'Credentials Field Label e.g. "API Key" or "Access Token"'
+      message: 'Credentials Field Label e.g. "API Key" or "Access Token"',
+      validate: function(input) {
+        return !!input;
+      }
     },
     // Field Type
     {
       type: 'list',
       name: 'type',
       choices: [{name: 'Text',value: 'text'},{name: 'Select',value:'select'}],
-      message: 'Credentials Field Type'
+      message: 'Credentials Field Type',
+      validate: function(type) {
+        return !!type;
+      }
     },
     // Field Key
     {
@@ -47,7 +53,10 @@ module.exports = {
       default: function(answers){
         return _.snakeCase(answers.label);
       },
-      message: 'Credentials Field Key e.g. api_key or auth_token, used by your scripts'
+      message: 'Credentials Field Key e.g. api_key or auth_token, used by your scripts',
+      validate: function(key) {
+        return !!key;
+      }
     },
     // Field Description
     {

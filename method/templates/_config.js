@@ -16,6 +16,6 @@ var config = {
 	}
 };
 
-module.exports = function(service){
+module.exports = function(service) {
 	service.registerMethod(config);
 };
