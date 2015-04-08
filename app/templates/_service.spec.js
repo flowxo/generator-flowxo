@@ -3,7 +3,23 @@ describe('<%= name %> Service', function() {
   describe('Configuration', function() {
     it('should be a service', function() {
       expect(this.service).to.be.a.flowxo.service;
+    });<% if(auth.type === 'oauth1') { %>
+
+    it('should define a strategy', function() {
+      expect(this.service.auth.strategy).to.exist;
     });
+
+    it('should define strategy options', function() {
+      expect(this.service.auth.options).to.have.all.keys('consumerKey', 'consumerSecret');
+    });<% } if(auth.type === 'oauth2') { %>
+
+    it('should define a strategy', function() {
+      expect(this.service.auth.strategy).to.exist;
+    });
+
+    it('should define strategy options', function() {
+      expect(this.service.auth.options).to.have.all.keys('clientID', 'clientSecret', 'state');
+    });<% } %>
   });<% if(auth.type === 'credentials') { %>
 
   describe('Authentication', function() {
@@ -13,26 +29,6 @@ describe('<%= name %> Service', function() {
         expect(err).not.to.exist;
         done();
       });
-    });
-  });<% } else if(auth.type === 'oauth1') { %>
-
-  describe('Authentication', function() {
-    it('should define a strategy', function() {
-      expect(this.service.auth.strategy).to.exist;
-    });
-
-    it('should define strategy options', function() {
-      expect(this.service.auth.options).to.have.all.keys('consumerKey', 'consumerSecret');
-    });
-  });<% } else if(auth.type === 'oauth2') { %>
-
-  describe('Authentication', function() {
-    it('should define a strategy', function() {
-      expect(this.service.auth.strategy).to.exist;
-    });
-
-    it('should define strategy options', function() {
-      expect(this.service.auth.options).to.have.all.keys('clientID', 'clientSecret', 'state');
     });
   });<% } %>
 });
