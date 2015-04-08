@@ -1,7 +1,8 @@
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
+var crypto = require('crypto');
 var express = require('express');
-var _ = require('lodash');
+var session = require('express-session');
 var inquirer = require('inquirer');
 var fs = require('fs');
 var SDK = require('flowxo-sdk');
@@ -12,6 +13,16 @@ var chalk = require('chalk');
  ******************************************************************************/
 var CREDENTIALS_FILENAME = 'credentials.json';
 var OAUTH_SERVER_PORT = 9000;
+
+var cloneObject = function(obj) {
+  var cloned = {};
+  for (var key in obj) {
+    if(obj.hasOwnProperty(key)) {
+      cloned[key] = obj[key];
+    }
+  }
+  return cloned;
+};
 
 module.exports = function(grunt) {
 
@@ -271,19 +282,17 @@ module.exports = function(grunt) {
     });
   };
 
-  authHandlers.oauth1 = function(service, cb) {
-    grunt.fail.fatal('Oauth 1 not yet implemented');
-  };
-
-  /**
-   * Handler for OAuth2
-   */
-  authHandlers.oauth2 = function(service, cb) {
+  authHandlers.oauth = function(service, formatCreds, cb) {
     var open = require('open');
     var url = require('url');
     var passport = require('passport');
 
     var app = express();
+    app.use(session({
+      secret: crypto.randomBytes(64).toString('hex'),
+      resave: false,
+      saveUninitialized: true
+    }));
 
     var name = service.slug;
     var route = '/auth/service/' + name;
@@ -299,18 +308,10 @@ module.exports = function(grunt) {
       pathname: cbRoute
     });
 
-    var options = _.clone(service.auth.options);
+    var options = cloneObject(service.auth.options);
     options.callbackURL = callbackURL;
 
-    var callback = function(access_token, refresh_token, profile, done) {
-      done(null, {
-        access_token: access_token,
-        refresh_token: refresh_token,
-        profile: profile
-      });
-    };
-
-    var strategy = getStrategy(service, options, callback);
+    var strategy = getStrategy(service, options, formatCreds);
 
     passport.use(name, strategy);
     app.use(passport.initialize());
@@ -332,6 +333,35 @@ module.exports = function(grunt) {
     });
     grunt.log.writeln(['Opening OAuth authentication in browser. Please confirm in browser window to continue.']);
     open(userUrl);
+  };
+
+  authHandlers.oauth1 = function(service, cb) {
+    var formatter = function(token, token_secret, profile, done) {
+      done(null, {
+        token: token,
+        token_secret: token_secret,
+        consumer_key: service.auth.options.consumerKey,
+        consumer_secret: service.auth.options.consumerSecret,
+        profile: profile
+      });
+    };
+
+    authHandlers.oauth(service, formatter, cb);
+  };
+
+  /**
+   * Handler for OAuth2
+   */
+  authHandlers.oauth2 = function(service, cb) {
+    var formatter = function(access_token, refresh_token, profile, done) {
+      done(null, {
+        access_token: access_token,
+        refresh_token: refresh_token,
+        profile: profile
+      });
+    };
+
+    authHandlers.oauth(service, formatter, cb);
   };
 
   var storeCredentials = function(credentials) {
