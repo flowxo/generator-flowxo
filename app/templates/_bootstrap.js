@@ -1,6 +1,7 @@
 'use strict';
+
 var sdk = require('flowxo-sdk'),
-  service = require('../');
+    service = require('../');
 
 var credentials = {};
 try {
@@ -9,8 +10,12 @@ try {
 
 beforeEach(function() {
   this.service = service;
-  this.credentials = credentials;
+
+  // Clone the credentials so they can't be globally
+  // overwritten by a test spec
+  this.credentials = JSON.parse(JSON.stringify(credentials));
+
   this.runner = new sdk.ScriptRunner(service, {
-    credentials: credentials
+    credentials: this.credentials
   });
 });
