@@ -3,7 +3,7 @@ flowxo-generator
 
 ## Installation
 ```
-npm install -g flowxo/flowxo-generator
+npm install -g yo flowxo/flowxo-generator
 ```
 
 ## Usage
