@@ -1,7 +1,7 @@
 flowxo-generator
 ================
 
-## Quick Install (local install)
+## Installation
 ```
 npm install -g flowxo/flowxo-generator
 ```
