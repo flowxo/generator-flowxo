@@ -1,4 +1,5 @@
 'use strict';
-module.exports = function(options,done){
-	done('Input Script Not Implemented');
+
+module.exports = function(options, done) {
+	done(new Error('Input Script Not Implemented'));
 };

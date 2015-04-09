@@ -8,6 +8,9 @@ module.exports = {
       name: 'name',
       message: 'What is the full name of your service (e.g. EchoSign or PipeDrive)?',
       default: this.service,
+      validate: function(input) {
+        return !!input;
+      }
     },
 
     // Auth Type
@@ -17,11 +20,14 @@ module.exports = {
       message: 'What sort of authentication does the service use?',
       choices: [
         {name: 'Credentials (e.g. API Key or username/password)', value: 'credentials'},
-        {name: 'OAuth 1.0', value: 'oauth1'},
-        {name: 'OAuth 2.0', value: 'oauth2'},
+        {name: 'OAuth 1', value: 'oauth1'},
+        {name: 'OAuth 2', value: 'oauth2'},
         // {name: 'OpenID', value: 'openid'},
       ],
-      default: 0
+      default: 0,
+      validate: function(input) {
+        return !!input;
+      }
     }
   ],
 
@@ -31,23 +37,32 @@ module.exports = {
     {
       type: 'input',
       name: 'label',
-      message: 'Credentials Field Label e.g. "API Key" or "Access Token"'
+      message: 'Credentials Field Label e.g. "API Key" or "Access Token"',
+      validate: function(input) {
+        return !!input;
+      }
     },
     // Field Type
     {
       type: 'list',
       name: 'type',
       choices: [{name: 'Text',value: 'text'},{name: 'Select',value:'select'}],
-      message: 'Credentials Field Type'
+      message: 'Credentials Field Type',
+      validate: function(type) {
+        return !!type;
+      }
     },
     // Field Key
     {
       type: 'input',
       name: 'key',
       default: function(answers){
-        return _.snakeCase(answers.label)
+        return _.snakeCase(answers.label);
       },
-      message: 'Credentials Field Key e.g. apikey or auth_token, used by your scripts'
+      message: 'Credentials Field Key e.g. api_key or auth_token, used by your scripts',
+      validate: function(key) {
+        return !!key;
+      }
     },
     // Field Description
     {

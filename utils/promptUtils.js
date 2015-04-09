@@ -1,5 +1,7 @@
+'use strict';
+
 module.exports = {
-  repeatedPrompt: function(name,prompts,cb){
+  repeatedPrompt: function(name, prompts, cb) {
     var self = this;
     var totalAnswers = [];
 
@@ -7,19 +9,19 @@ module.exports = {
       type: 'confirm',
       name: 'again',
       message: 'Would you like to define another ' + name,
-      default: true
+      default: false
     }];
 
-    var doPrompt = function(){
-      self.prompt(prompts,function(answers){
+    var doPrompt = function() {
+      self.prompt(prompts, function(answers) {
         totalAnswers.push(answers);
-        self.prompt(repeatQuestion,function(repeat){
-          if(repeat.again){
+        self.prompt(repeatQuestion, function(repeat) {
+          if(repeat.again) {
             doPrompt();
-          }else{
+          } else {
             cb(totalAnswers);
           }
-        })
+        });
       });
     };
     doPrompt();

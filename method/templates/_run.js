@@ -1,4 +1,5 @@
 'use strict';
-module.exports = function(options,done){
-	done('Run Script Not Implemented');
+
+module.exports = function(options, done) {
+	done(new Error('Run Script Not Implemented'));
 };

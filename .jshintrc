@@ -1,6 +1,6 @@
 {
   "node": true,
-  "browser": true,
+  "expr": true,
   "esnext": true,
   "bitwise": true,
   "curly": true,
@@ -20,20 +20,12 @@
   "globals": {
     "after": false,
     "afterEach": false,
-    "angular": false,
+    "assert": false,
     "before": false,
     "beforeEach": false,
     "describe": false,
     "expect": false,
-    "inject": false,
     "it": false,
-    "xit": false,
-    "jasmine": false,
-    "rootPath": false,
-    "requireLocal": false,
-    "rootPath": false,
-    "spyOn": false,
-    "should": false,
-    "assert": false
+    "should": false
   }
 }
