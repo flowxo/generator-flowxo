@@ -7,6 +7,11 @@ var inquirer = require('inquirer');
 var fs = require('fs');
 var SDK = require('flowxo-sdk');
 var chalk = require('chalk');
+var service = require('./lib');
+var async = require('async');
+var chai = require('chai');
+
+chai.use(SDK.Chai);
 
 /******************************************************************************
  * Global Vars
@@ -32,6 +37,11 @@ module.exports = function(grunt) {
 
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
+
+  var logHeader = function(message){
+    grunt.log.subhead(message);
+    grunt.log.writeln(Array(message.length+1).join('-'));
+  };
 
   // Credentials
   try {
@@ -81,8 +91,177 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('run', 'Run a service method', function() {
-    var service = require('./lib');
+  function promptMethod(cb) {
+
+    // If we have been passed it in the command-line
+    if(grunt.option('method')) {
+      var slug = grunt.option('method');
+      for(var i = 0; i < service.methods.length; i++) {
+        if(service.methods[i].slug === slug) {
+          cb(service.methods[i]);
+        }
+      }
+      throw 'Unable to find method with slug ' + slug;
+    }
+
+    // First we need them to choose the script
+    var methodPrompt = [{
+      type: 'list',
+      name: 'method',
+      message: 'Method',
+      choices: service.methods.map(function(m) {
+        return {
+          name: m.name,
+          value: m
+        };
+      })
+    }];
+
+    inquirer.prompt(methodPrompt, function(answers) {
+      cb(null, answers.method);
+    });
+  }
+
+  function promptInputs(inputs, cb) {
+    var prompts = inputs.map(function(input) {
+      var prompt = {
+        name: input.key,
+        message: input.label,
+      };
+
+      if(input.type === 'select') {
+        prompt.type = 'list';
+        prompt.choices = input.input_options.map(function(c) {
+          return {
+            name: c.label,
+            value: c.value
+          };
+        });
+      } else if(input.type === 'text') {
+        prompt.type = 'input';
+      }
+
+      return prompt;
+
+    });
+
+    inquirer.prompt(prompts, function(answers) {
+      cb(null, answers);
+    });
+  }
+
+  /**
+   * Run a method from start to finish
+   */
+  grunt.registerTask('run', function() {
+    // Check we have some methods to run
+    if(service.methods.length===0){
+      grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
+    }
+    var done = this.async();
+
+    var runner = new SDK.ScriptRunner(service, {
+      credentials: grunt.credentials
+    });
+
+    async.waterfall([
+      // Method Selection
+      function(callback) {
+        logHeader('Method Selection');
+        promptMethod(callback);
+      },
+
+      // input.js
+      function(method, callback) {
+        if(method.scripts.input) {
+          logHeader('Custom Input Fields');
+          runner.run(method.slug, 'input', {}, function(err, inputs) {
+            if(err) {
+              return callback(err);
+            }
+            // Quick check that the fields are valid
+            try {
+              chai.expect(inputs).to.be.flowxo.input.fields;
+            } catch(e) {
+              grunt.fail.fatal('Error in return from input.js script: ' + e.toString());
+            }
+            promptInputs(inputs, function(err, answers) {
+              callback(err, method, answers);
+            });
+          });
+        } else {
+          callback(null, method, {});
+        }
+      },
+      // output.js
+      function(method, inputs, callback) {
+        if(method.scripts.output) {
+          runner.run(method.slug, 'output', {
+            input: inputs
+          }, function(err, outputs) {
+            if(err) {
+              callback(err);
+            } else {
+              try {
+                chai.expect(outputs).to.be.flowxo.output.fields;
+              } catch(e) {
+                grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
+              }
+              callback(null, method, inputs, outputs);
+            }
+          });
+        } else {
+          callback(null, method, inputs, []);
+        }
+      },
+
+      // run.js
+      function(method, inputs, outputs, callback) {
+        runner.run(method.slug, 'run', {
+          input: inputs
+        }, function(err, result) {
+          if(err) {
+            callback(err);
+          } else {
+            callback(null, method, result, outputs);
+          }
+        });
+      },
+
+      // validation
+      function(method, result, outputs, callback) {
+        // We need to merge the defined outputs with the dynamic ones
+        method.fields.output = (method.fields.output || []).concat(outputs);
+
+        try {
+          chai.expect(result).to.matchConfig(method);
+        } catch(e) {
+          logHeader('Validation Error');
+          grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
+        }
+
+        callback(null,result);
+      }
+
+    ], function(err, result) {
+      if(err) {
+        logHeader(chalk.red('Script Error'));
+        grunt.fail.fatal(err);
+      } else {
+        logHeader('Script Output');
+        grunt.log.writeln(chalk.cyan(JSON.stringify(result, null, 2)));
+      }
+      done();
+    });
+  });
+
+
+  grunt.registerTask('run:single', 'Run a service method', function() {
+    // Check we have some methods to run
+    if(service.methods.length===0){
+      grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
+    }
+
     var done = this.async();
 
     // This will store the current state
@@ -158,39 +337,6 @@ module.exports = function(grunt) {
       });
     };
 
-    var doMethodPrompt = function(cb) {
-
-      // If we have been passed it in the command-line
-      if(grunt.option('method')) {
-        var slug = grunt.option('method');
-        for(var i = 0; i < service.methods.length; i++) {
-          if(service.methods[i].slug === slug) {
-            state.method = service.methods[i];
-            return doScriptPrompt(cb);
-          }
-        }
-        throw 'Unable to find method with slug ' + slug;
-      }
-
-      // First we need them to choose the script
-      var methodPrompt = [{
-        type: 'list',
-        name: 'method',
-        message: 'Select a method to run',
-        choices: service.methods.map(function(m) {
-          return {
-            name: m.name,
-            value: m
-          };
-        })
-      }];
-
-      inquirer.prompt(methodPrompt, function(answers) {
-        state.method = answers.method;
-        doScriptPrompt(cb);
-      });
-    };
-
     var doScriptPrompt = function(cb) {
 
       if(grunt.option('script')) {
@@ -254,8 +400,11 @@ module.exports = function(grunt) {
       }
     };
 
-    doMethodPrompt(function() {
-      runManager(done);
+    promptMethod(function(err,method){
+      state.method = method;
+      doScriptPrompt(function(){
+        runManager(done);
+      });
     });
 
   });
