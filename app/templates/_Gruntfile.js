@@ -12,7 +12,8 @@ var chalk = require('chalk');
  * Global Vars
  ******************************************************************************/
 var CREDENTIALS_FILENAME = 'credentials.json';
-var OAUTH_SERVER_PORT = 9000;
+var OAUTH_SERVER_URL = process.env.OAUTH_SERVER_URL || 'http://flowxo-dev.cc';
+var OAUTH_SERVER_PORT = process.env.OAUTH_SERVER_PORT || 9000;
 
 var cloneObject = function(obj) {
   var cloned = {};
@@ -305,12 +306,12 @@ module.exports = function(grunt) {
     var cbRoute = route + '/callback';
 
     // Calculate the callbackURL for the request
-    var serverUrl = url.parse(process.env.BASE_URL);
+    var serverUrl = url.parse(OAUTH_SERVER_URL);
 
     var callbackURL = url.format({
       protocol: serverUrl.protocol,
       hostname: serverUrl.hostname,
-      port: serverUrl.port,
+      port: OAUTH_SERVER_PORT,
       pathname: cbRoute
     });
 
@@ -329,12 +330,12 @@ module.exports = function(grunt) {
       cb(req.account);
     });
 
-    app.listen(serverUrl.port || OAUTH_SERVER_PORT);
+    app.listen(OAUTH_SERVER_PORT);
 
     var userUrl = url.format({
       protocol: serverUrl.protocol,
       hostname: serverUrl.hostname,
-      port: serverUrl.port,
+      port: OAUTH_SERVER_PORT,
       pathname: route
     });
     grunt.log.writeln(['Opening OAuth authentication in browser. Please confirm in browser window to continue.']);
