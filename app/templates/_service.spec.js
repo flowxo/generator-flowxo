@@ -1,7 +1,7 @@
 'use strict';
 describe('<%= name %> Service', function() {
   describe('Configuration', function() {
-    it('should be a service', function() {
+    it('should be a valid service', function() {
       expect(this.service).to.be.a.flowxo.service;
     });<% if(auth.type === 'oauth1') { %>
 
