@@ -38,9 +38,9 @@ module.exports = function(grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
-  var logHeader = function(message){
+  var logHeader = function(message) {
     grunt.log.subhead(message);
-    grunt.log.writeln(Array(message.length+1).join('-'));
+    grunt.log.writeln(Array(message.length + 1).join('-'));
   };
 
   // Credentials
@@ -155,7 +155,7 @@ module.exports = function(grunt) {
    */
   grunt.registerTask('run', function() {
     // Check we have some methods to run
-    if(service.methods.length===0){
+    if(service.methods.length === 0) {
       grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
     }
     var done = this.async();
@@ -194,10 +194,10 @@ module.exports = function(grunt) {
         }
       },
       // output.js
-      function(method, inputs, callback) {
+      function(method, customInputs, callback) {
         if(method.scripts.output) {
           runner.run(method.slug, 'output', {
-            input: inputs
+            input: customInputs
           }, function(err, outputs) {
             if(err) {
               callback(err);
@@ -207,12 +207,27 @@ module.exports = function(grunt) {
               } catch(e) {
                 grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
               }
-              callback(null, method, inputs, outputs);
+              callback(null, method, customInputs, outputs);
             }
           });
         } else {
-          callback(null, method, inputs, []);
+          callback(null, method, customInputs, []);
         }
+      },
+      // Static inputs
+      function(method, inputs, outputs, callback) {
+        logHeader('Standard Input Fields');
+
+        promptInputs(method.fields.input, function(err, answers) {
+          if(err) {
+            callback(err);
+          } else {
+            for(var a in answers) {
+              inputs[a] = answers[a];
+            }
+            callback(null, method, inputs, outputs);
+          }
+        });
       },
 
       // run.js
@@ -240,7 +255,7 @@ module.exports = function(grunt) {
           grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
         }
 
-        callback(null,result);
+        callback(null, result);
       }
 
     ], function(err, result) {
@@ -258,7 +273,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask('run:single', 'Run a service method', function() {
     // Check we have some methods to run
-    if(service.methods.length===0){
+    if(service.methods.length === 0) {
       grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
     }
 
@@ -291,7 +306,7 @@ module.exports = function(grunt) {
     }];
 
     var runMethod = function(cb) {
-      return runner.run(state.method.slug, state.script, state.options, function(err, data) {
+      return runner.run(state.method.slug, state.script, state.options || {}, function(err, data) {
         if(err) {
           grunt.fail.fatal(err);
         }
@@ -400,9 +415,9 @@ module.exports = function(grunt) {
       }
     };
 
-    promptMethod(function(err,method){
+    promptMethod(function(err, method) {
       state.method = method;
-      doScriptPrompt(function(){
+      doScriptPrompt(function() {
         runManager(done);
       });
     });
