@@ -16,7 +16,7 @@ var OAUTH_SERVER_PORT = 9000;
 
 var cloneObject = function(obj) {
   var cloned = {};
-  for (var key in obj) {
+  for(var key in obj) {
     if(obj.hasOwnProperty(key)) {
       cloned[key] = obj[key];
     }
@@ -113,6 +113,19 @@ module.exports = function(grunt) {
     var runMethod = function(cb) {
       return runner.run(state.method.slug, state.script, state.options, function(err, data) {
         output(data);
+
+        // Unless we have the --no-check-outputs option on
+        if(!grunt.option('no-check-outputs')) {
+          var chai = require('chai');
+          chai.use(SDK.Chai);
+          if(state.script === 'run') {
+            chai.expect(data).to.matchConfig(state.method);
+          } else if(state.script === 'input') {
+            chai.expect(data).to.be.flowxo.input.fields;
+          } else if(state.script === 'output') {
+            chai.expect(data).to.be.flowxo.output.fields;
+          }
+        }
         cb();
       });
     };
@@ -279,7 +292,9 @@ module.exports = function(grunt) {
 
     inquirer.prompt(prompts, function(answers) {
       // Ping the endpoint to ensure the credentials are valid
-      service.runScript('ping', { credentials: answers }, function(err) {
+      service.runScript('ping', {
+        credentials: answers
+      }, function(err) {
         if(err) {
           grunt.fail.fatal('Invalid credentials: ' + err);
         }
