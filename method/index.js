@@ -53,7 +53,7 @@ FlowXOMethodGenerator.prototype.prompts = function() {
       type: 'list',
       name: 'type',
       message: 'What type of method is it?',
-      choices: ['Action', 'Poller'],
+      choices: ['Action', 'Poller','Webhook'],
       filter: function(val) {
         return val.toLowerCase();
       },
@@ -72,7 +72,12 @@ FlowXOMethodGenerator.prototype.prompts = function() {
       }, {
         name: 'Custom Output',
         value: 'output'
-      }]
+      }],
+      when: function(answers){
+        // Do not run on webhooks
+        answers.scripts = [];
+        return answers.type !== 'webhook';
+      }
     }
   ];
 
@@ -94,6 +99,7 @@ FlowXOMethodGenerator.prototype.methodFiles = function coreFiles() {
   this.destinationRoot(methodDir);
   this.template('_config.js', 'config.js');
   this.template('_run.js', 'run.js');
+
   if(this.scripts.indexOf('input') !== -1) {
     this.template('_input.js', 'input.js');
   }
