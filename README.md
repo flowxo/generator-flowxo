@@ -1,19 +1,23 @@
-flowxo-generator
+Flow XO Generator
 ================
+
+This is a [yeoman](http://yeoman.io) generator, used to scaffold services for the [Flow XO](http://flowxo.com) platform.
+
+Please refer to the [Flow XO SDK documentation](http://github.com/flowxo/flowxo-sdk) for more information on how to use the generator.
 
 ## Installation
 ```
-npm install -g yo flowxo/flowxo-generator
+npm install -g yo flowxo-generator
 ```
 
 ## Usage
 ```
 yo flowxo
 ```
-Scaffolds a new FlowXO Service
+Scaffolds a new Flow XO Service
 
 ```
-yo flowxo:method <method-name> # <method-name> e.g. 'Add A Document'
+yo flowxo:method
 ```
-Scaffolds a new FlowXO Service Method. This must be run from the root of a FlowXO Service folder.
+Scaffolds a new Flow XO Service Method. This must be run from the root of a Flow XO Service folder.
 

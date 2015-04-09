@@ -1,14 +1,15 @@
 {
   "name": "generator-flowxo",
-  "version": "0.0.1",
-  "description": "FlowXO Service Generator",
+  "version": "1.0.0",
+  "description": "Flow XO Service Generator.",
   "author": {
-    "name": "Joe Woodhouse"
+    "name": "Joe Woodhouse",
+    "email": "joewoodhouse30@gmail.com"
   },
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com:flowxo/flowxo-generator.git"
+    "url": "https://github.com/flowxo/flowxo-generator.git"
   },
   "scripts": {
     "test": "mocha"
