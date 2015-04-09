@@ -113,6 +113,9 @@ module.exports = function(grunt) {
 
     var runMethod = function(cb) {
       return runner.run(state.method.slug, state.script, state.options, function(err, data) {
+        if(err) {
+          grunt.fail.fatal(err);
+        }
         output(data);
         cb();
       });
