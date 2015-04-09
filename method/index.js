@@ -90,7 +90,7 @@ FlowXOMethodGenerator.prototype.fieldPrompts = function fieldPrompts() {
 };
 
 FlowXOMethodGenerator.prototype.methodFiles = function coreFiles() {
-  var methodDir = path.join('methods', this.slug);
+  var methodDir = path.join('lib','methods', this.slug);
   this.mkdir(methodDir);
 
   // First write the tests ;)

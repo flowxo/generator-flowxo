@@ -1,7 +1,7 @@
 'use strict';
 
 var sdk = require('flowxo-sdk'),
-    service = require('../');
+    service = require('../lib');
 
 var credentials = {};
 try {

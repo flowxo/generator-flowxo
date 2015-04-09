@@ -81,7 +81,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('run', 'Run a service method', function() {
-    var service = require('./');
+    var service = require('./lib');
     var done = this.async();
 
     // This will store the current state

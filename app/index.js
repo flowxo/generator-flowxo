@@ -62,24 +62,32 @@ FlowXOGenerator.prototype.authPrompting = function authPrompting() {
 };
 
 FlowXOGenerator.prototype.coreFiles = function coreFiles() {
+  // Root Boilerplate
   this.template('_gitignore', '.gitignore');
   this.template('_jshintrc', '.jshintrc');
   this.template('_jsbeautifyrc', '.jsbeautifyrc');
   this.template('_package.json', 'package.json');
   this.template('_Gruntfile.js', 'Gruntfile.js');
-  this.template('_index.js', 'index.js');
   this.template('_README.md', 'README.md');
   this.template('_env', '.env');
-  this.mkdir('methods');
+
+  // Lib
+  this.mkdir('lib');
+  if(this.auth.type === 'credentials') {
+    this.template('_ping.js', 'lib/ping.js');
+  }
+
+  this.template('_index.js', 'lib/index.js');
+
+  // Methods
+  this.mkdir('lib/methods');
+
+  // Tests
   this.mkdir('tests');
   this.template('_bootstrap.js', 'tests/bootstrap.js');
   this.template('_helpers.js', 'tests/helpers.js');
   this.template('_service.spec.js', 'tests/service.spec.js');
   this.template('_jshintrc_test', 'tests/.jshintrc');
-
-  if(this.auth.type === 'credentials') {
-    this.template('_ping.js', 'ping.js');
-  }
 };
 
 FlowXOGenerator.prototype.installDeps = function installDeps() {

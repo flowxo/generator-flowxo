@@ -5,7 +5,7 @@
   "dependencies": {
     "flowxo-sdk": "flowxo/flowxo-sdk"
   },
-  "main": "index.js",
+  "main": "lib/index.js",
   "devDependencies": {
     "chai": "^2.2.0",
     "chalk": "^1.0.0",
