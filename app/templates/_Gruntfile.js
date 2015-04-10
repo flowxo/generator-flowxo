@@ -126,7 +126,7 @@ module.exports = function(grunt) {
     var prompts = inputs.map(function(input) {
       var prompt = {
         name: input.key,
-        message: input.label,
+        message: input.label + ':'
       };
 
       if(input.type === 'select') {
@@ -137,12 +137,30 @@ module.exports = function(grunt) {
             value: c.value
           };
         });
+        if(!input.required) {
+          prompt.choices.unshift({
+            name: '(none)',
+            value: ''
+          });
+        }
       } else if(input.type === 'text') {
         prompt.type = 'input';
       }
 
-      return prompt;
+      // Make it required if necessary
+      if(input.required) {
+        prompt.message = prompt.message + '*';
+        prompt.validate = function(item) {
+          return !!item;
+        };
+      }
 
+      // Support for default values
+      if(input.default) {
+        prompt.default = input.default;
+      }
+
+      return prompt;
     });
 
     inquirer.prompt(prompts, function(answers) {
