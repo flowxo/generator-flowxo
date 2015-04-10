@@ -164,6 +164,9 @@ module.exports = function(grunt) {
       credentials: grunt.credentials
     });
 
+    var inputs = {},
+        outputs = [];
+
     async.waterfall([
       // Method Selection
       function(callback) {
@@ -171,80 +174,93 @@ module.exports = function(grunt) {
         promptMethod(callback);
       },
 
+      // Static inputs
+      function(method, callback) {
+        if(method.fields.input && method.fields.input.length) {
+          logHeader('Standard Input Fields');
+          promptInputs(method.fields.input, function(err, answers) {
+            if(err) {
+              callback(err);
+            } else {
+              for(var a in answers) {
+                inputs[a] = answers[a];
+              }
+              callback(null, method);
+            }
+          });
+        } else {
+          callback(null, method);
+        }
+      },
+
       // input.js
       function(method, callback) {
         if(method.scripts.input) {
           logHeader('Custom Input Fields');
-          runner.run(method.slug, 'input', {}, function(err, inputs) {
+          runner.run(method.slug, 'input', {}, function(err, customInputs) {
             if(err) {
               return callback(err);
             }
             // Quick check that the fields are valid
             try {
-              chai.expect(inputs).to.be.flowxo.input.fields;
+              chai.expect(customInputs).to.be.flowxo.input.fields;
             } catch(e) {
               grunt.fail.fatal('Error in return from input.js script: ' + e.toString());
             }
-            promptInputs(inputs, function(err, answers) {
-              callback(err, method, answers);
+            promptInputs(customInputs, function(err, answers) {
+              if(err) {
+                callback(err);
+              } else {
+                for(var a in answers) {
+                  inputs[a] = answers[a];
+                }
+                callback(null, method);
+              }
             });
           });
         } else {
-          callback(null, method, {});
+          callback(null, method);
         }
       },
+
       // output.js
-      function(method, customInputs, callback) {
+      function(method, callback) {
         if(method.scripts.output) {
           runner.run(method.slug, 'output', {
-            input: customInputs
-          }, function(err, outputs) {
+            input: inputs
+          }, function(err, customOutputs) {
             if(err) {
               callback(err);
             } else {
               try {
-                chai.expect(outputs).to.be.flowxo.output.fields;
+                chai.expect(customOutputs).to.be.flowxo.output.fields;
               } catch(e) {
                 grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
               }
-              callback(null, method, customInputs, outputs);
+              outputs = customOutputs;
+              callback(null, method);
             }
           });
         } else {
-          callback(null, method, customInputs, []);
+          callback(null, method);
         }
-      },
-      // Static inputs
-      function(method, inputs, outputs, callback) {
-        logHeader('Standard Input Fields');
-
-        promptInputs(method.fields.input, function(err, answers) {
-          if(err) {
-            callback(err);
-          } else {
-            for(var a in answers) {
-              inputs[a] = answers[a];
-            }
-            callback(null, method, inputs, outputs);
-          }
-        });
       },
 
       // run.js
-      function(method, inputs, outputs, callback) {
+      function(method, callback) {
         runner.run(method.slug, 'run', {
           input: inputs
         }, function(err, result) {
           if(err) {
             callback(err);
           } else {
-            callback(null, method, result, outputs);
+            callback(null, method, result);
           }
         });
       },
 
       // validation
-      function(method, result, outputs, callback) {
+      function(method, result, callback) {
         // We need to merge the defined outputs with the dynamic ones
         method.fields.output = (method.fields.output || []).concat(outputs);
 
