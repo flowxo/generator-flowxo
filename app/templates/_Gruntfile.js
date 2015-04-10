@@ -283,21 +283,24 @@ module.exports = function(grunt) {
           // We need to merge the defined outputs with the dynamic ones
           method.fields.output = (method.fields.output || []).concat(outputs);
 
-          try {
+          var err = null;
+          // Commented out until we figure out what to do here
+          /*try {
             chai.expect(result).to.matchConfig(method);
           } catch(e) {
-            logHeader('Validation Error');
-            grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
-          }
+            err = new Error('Result does not match config: ' + e.toString());
+          }*/
 
-          callback(null, result);
+          callback(err, result);
         }
 
       ], function(err, result) {
         if(err) {
           logHeader(chalk.red('Script Error'));
           grunt.log.writeln(chalk.red(err));
-        } else {
+        }
+
+        if(result) {
           logHeader('Script Output');
           grunt.log.writeln(chalk.cyan(JSON.stringify(result, null, 2)));
         }

@@ -1,12 +1,6 @@
 'use strict';
 
 describe('<%= name %>', function() {
-  var method;
-
-  beforeEach(function() {
-    method = this.service.getMethod('<%= slug %>');
-  });
-
   describe('Run Script', function() {
     it('should have a working run script', function(done) {
       var options = {};
