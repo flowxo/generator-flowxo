@@ -73,7 +73,7 @@ module.exports = function(grunt) {
           interrupt: false,
           debounceDelay: 250
         },
-        files: ['index.js', 'methods/**/*.js', 'tests/**/*.spec.js'],
+        files: ['lib/**/*.js', 'tests/**/*.spec.js'],
         tasks: ['jshint', 'test']
       }
     },
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
         reporter: require('jshint-stylish')
       },
       source: {
-        src: ['Gruntfile.js', 'index.js', 'ping.js', 'provider.js', 'methods/**/*.js']
+        src: ['Gruntfile.js', 'lib/**/*.js']
       },
       tests: {
         src: ['tests/**/*.js'],
