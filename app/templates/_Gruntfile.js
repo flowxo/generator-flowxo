@@ -73,7 +73,7 @@ module.exports = function(grunt) {
           interrupt: false,
           debounceDelay: 250
         },
-        files: ['index.js', 'methods/**/*.js', 'tests/**/*.spec.js'],
+        files: ['lib/**/*.js', 'tests/**/*.spec.js'],
         tasks: ['jshint', 'test']
       }
     },
@@ -83,7 +83,7 @@ module.exports = function(grunt) {
         reporter: require('jshint-stylish')
       },
       source: {
-        src: ['Gruntfile.js', 'index.js', 'ping.js', 'provider.js', 'methods/**/*.js']
+        src: ['Gruntfile.js', 'lib/**/*.js']
       },
       tests: {
         src: ['tests/**/*.js'],
@@ -126,7 +126,7 @@ module.exports = function(grunt) {
     var prompts = inputs.map(function(input) {
       var prompt = {
         name: input.key,
-        message: input.label,
+        message: input.label + ':'
       };
 
       if(input.type === 'select') {
@@ -137,12 +137,30 @@ module.exports = function(grunt) {
             value: c.value
           };
         });
+        if(!input.required) {
+          prompt.choices.unshift({
+            name: '(none)',
+            value: ''
+          });
+        }
       } else if(input.type === 'text') {
         prompt.type = 'input';
       }
 
-      return prompt;
+      // Make it required if necessary
+      if(input.required) {
+        prompt.message = prompt.message + '*';
+        prompt.validate = function(item) {
+          return !!item;
+        };
+      }
 
+      // Support for default values
+      if(input.default) {
+        prompt.default = input.default;
+      }
+
+      return prompt;
     });
 
     inquirer.prompt(prompts, function(answers) {
@@ -164,110 +182,146 @@ module.exports = function(grunt) {
       credentials: grunt.credentials
     });
 
-    async.waterfall([
-      // Method Selection
-      function(callback) {
-        logHeader('Method Selection');
-        promptMethod(callback);
-      },
+    var runIt = function() {
+      var inputs = {},
+          outputs = [];
 
-      // input.js
-      function(method, callback) {
-        if(method.scripts.input) {
-          logHeader('Custom Input Fields');
-          runner.run(method.slug, 'input', {}, function(err, inputs) {
-            if(err) {
-              return callback(err);
-            }
-            // Quick check that the fields are valid
-            try {
-              chai.expect(inputs).to.be.flowxo.input.fields;
-            } catch(e) {
-              grunt.fail.fatal('Error in return from input.js script: ' + e.toString());
-            }
-            promptInputs(inputs, function(err, answers) {
-              callback(err, method, answers);
+      async.waterfall([
+        // Method Selection
+        function(callback) {
+          logHeader('Method Selection');
+          promptMethod(callback);
+        },
+
+        // Static inputs
+        function(method, callback) {
+          if(method.fields.input && method.fields.input.length) {
+            logHeader('Standard Input Fields');
+            promptInputs(method.fields.input, function(err, answers) {
+              if(err) {
+                callback(err);
+              } else {
+                for(var a in answers) {
+                  inputs[a] = answers[a];
+                }
+                callback(null, method);
+              }
             });
-          });
-        } else {
-          callback(null, method, {});
-        }
-      },
-      // output.js
-      function(method, customInputs, callback) {
-        if(method.scripts.output) {
-          runner.run(method.slug, 'output', {
-            input: customInputs
-          }, function(err, outputs) {
+          } else {
+            callback(null, method);
+          }
+        },
+
+        // input.js
+        function(method, callback) {
+          if(method.scripts.input) {
+            logHeader('Custom Input Fields');
+            runner.run(method.slug, 'input', {}, function(err, customInputs) {
+              if(err) {
+                return callback(err);
+              }
+              // Quick check that the fields are valid
+              try {
+                chai.expect(customInputs).to.be.flowxo.input.fields;
+              } catch(e) {
+                grunt.fail.fatal('Error in return from input.js script: ' + e.toString());
+              }
+              promptInputs(customInputs, function(err, answers) {
+                if(err) {
+                  callback(err);
+                } else {
+                  for(var a in answers) {
+                    inputs[a] = answers[a];
+                  }
+                  callback(null, method);
+                }
+              });
+            });
+          } else {
+            callback(null, method);
+          }
+        },
+
+        // output.js
+        function(method, callback) {
+          if(method.scripts.output) {
+            runner.run(method.slug, 'output', {
+              input: inputs
+            }, function(err, customOutputs) {
+              if(err) {
+                callback(err);
+              } else {
+                try {
+                  chai.expect(customOutputs).to.be.flowxo.output.fields;
+                } catch(e) {
+                  grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
+                }
+                outputs = customOutputs;
+                callback(null, method);
+              }
+            });
+          } else {
+            callback(null, method);
+          }
+        },
+
+        // run.js
+        function(method, callback) {
+          runner.run(method.slug, 'run', {
+            input: inputs
+          }, function(err, result) {
             if(err) {
               callback(err);
             } else {
-              try {
-                chai.expect(outputs).to.be.flowxo.output.fields;
-              } catch(e) {
-                grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
-              }
-              callback(null, method, customInputs, outputs);
+              callback(null, method, result);
             }
           });
-        } else {
-          callback(null, method, customInputs, []);
-        }
-      },
-      // Static inputs
-      function(method, inputs, outputs, callback) {
-        logHeader('Standard Input Fields');
+        },
 
-        promptInputs(method.fields.input, function(err, answers) {
-          if(err) {
-            callback(err);
-          } else {
-            for(var a in answers) {
-              inputs[a] = answers[a];
-            }
-            callback(null, method, inputs, outputs);
-          }
-        });
-      },
+        // validation
+        function(method, result, callback) {
+          // We need to merge the defined outputs with the dynamic ones
+          method.fields.output = (method.fields.output || []).concat(outputs);
 
-      // run.js
-      function(method, inputs, outputs, callback) {
-        runner.run(method.slug, 'run', {
-          input: inputs
-        }, function(err, result) {
-          if(err) {
-            callback(err);
-          } else {
-            callback(null, method, result, outputs);
-          }
-        });
-      },
+          var err = null;
+          // Commented out until we figure out what to do here
+          /*try {
+            chai.expect(result).to.matchConfig(method);
+          } catch(e) {
+            err = new Error('Result does not match config: ' + e.toString());
+          }*/
 
-      // validation
-      function(method, result, outputs, callback) {
-        // We need to merge the defined outputs with the dynamic ones
-        method.fields.output = (method.fields.output || []).concat(outputs);
-
-        try {
-          chai.expect(result).to.matchConfig(method);
-        } catch(e) {
-          logHeader('Validation Error');
-          grunt.fail.fatal('Error in return from output.js script: ' + e.toString());
+          callback(err, result);
         }
 
-        callback(null, result);
-      }
+      ], function(err, result) {
+        if(err) {
+          logHeader(chalk.red('Script Error'));
+          grunt.log.writeln(chalk.red(err));
+        }
 
-    ], function(err, result) {
-      if(err) {
-        logHeader(chalk.red('Script Error'));
-        grunt.fail.fatal(err);
-      } else {
-        logHeader('Script Output');
-        grunt.log.writeln(chalk.cyan(JSON.stringify(result, null, 2)));
-      }
-      done();
-    });
+        if(result) {
+          logHeader('Script Output');
+          grunt.log.writeln(chalk.cyan(JSON.stringify(result, null, 2)));
+        }
+
+        // Ask if we want to go again
+        inquirer.prompt({
+          type: 'confirm',
+          name: 'again',
+          message: 'Would you like to run another method?',
+          default: true
+        }, function(answers) {
+          if(answers.again) {
+            runIt();
+          } else {
+            done();
+          }
+        });
+      });
+    };
+
+    runIt();
   });
 
 
