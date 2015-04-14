@@ -54,5 +54,4 @@ module.exports = function(grunt) {
       done();
     });
   });
-  grunt.registerTask('run:replay',['env','runReplayTask']);
 };

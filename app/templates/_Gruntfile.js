@@ -1,5 +1,4 @@
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
-
 'use strict';
 var SDK = require('flowxo-sdk');
 var chai = require('chai');
@@ -77,6 +76,19 @@ module.exports = function(grunt) {
     }
   });
 
+  // Authentication Tasks
+  grunt.registerTask('auth', ['env', 'authTask']);
+  grunt.registerTask('auth:refresh', ['env', 'authRefreshTask']);
+
+  // Run Tasks
+  grunt.registerTask('run',['env','runTask']);
+  grunt.registerTask('run:record',['env','runRecordTask']);
+  grunt.registerTask('run:replay',['env','runReplayTask']);
+  grunt.registerTask('run:single',['env','runSingleTask']);
+
+  // Test Tasks
   grunt.registerTask('test', ['env', 'mochaTest']);
+
+  // Default Task
   grunt.registerTask('default', ['env', 'jshint', 'test', 'watch']);
 };

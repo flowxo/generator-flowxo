@@ -32,7 +32,4 @@ module.exports = function(grunt) {
       done();
     });
   });
-
-  grunt.registerTask('auth', ['env', 'authTask']);
-  grunt.registerTask('auth:refresh', ['env', 'authRefreshTask']);
 };

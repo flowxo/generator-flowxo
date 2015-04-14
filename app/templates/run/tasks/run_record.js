@@ -96,9 +96,6 @@ module.exports = function(grunt) {
 
       });
     }
-
-
     run();
   });
-  grunt.registerTask('run:record',['env','runRecordTask']);
 };

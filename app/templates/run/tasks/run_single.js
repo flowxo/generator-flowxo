@@ -69,5 +69,4 @@ module.exports = function(grunt) {
       done();
     });
   });
-  grunt.registerTask('run:single',['env','runSingleTask']);
 };

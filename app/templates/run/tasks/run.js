@@ -42,5 +42,4 @@ module.exports = function(grunt) {
     }
     run();
   });
-  grunt.registerTask('run',['env','runTask']);
 };
