@@ -94,6 +94,9 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   this.template('run/tasks/_run_replay.js','run/tasks/run_replay.js');
   this.template('run/tasks/_run_single.js','run/tasks/run_single.js');
 
+  this.mkdir('run/recorded');
+  this.template('run/_runs.json','run/recorded/runs.json');
+
   // Tests
   this.mkdir('tests');
   this.template('_bootstrap.js', 'tests/bootstrap.js');

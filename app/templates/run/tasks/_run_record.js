@@ -12,11 +12,13 @@ module.exports = function(grunt) {
     var service = grunt.getService();
 
     var done = this.async();
-    var REPLAY_FILE = grunt.option('replay') || 'runs.json';
+    var REPLAY_FILE = grunt.option('name') || 'runs.json';
+    var REPLAY_PATH = path.join(grunt.rootPath,'run','recorded',REPLAY_FILE);
+
     var tests;
 
     try {
-      tests = require(path.join(grunt.rootPath, REPLAY_FILE));
+      tests = require(REPLAY_PATH);
     } catch(e) {
       tests = [];
     }
@@ -26,7 +28,7 @@ module.exports = function(grunt) {
     });
 
     function save(cb) {
-      fs.writeFile(path.join(grunt.rootPath, REPLAY_FILE), JSON.stringify(tests, null, 2), cb);
+      fs.writeFile(REPLAY_PATH, JSON.stringify(tests, null, 2), cb);
     }
 
     // function menu() {

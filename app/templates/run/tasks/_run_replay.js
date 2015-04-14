@@ -9,9 +9,18 @@ module.exports = function(grunt) {
 
   grunt.registerTask('runReplayTask', function() {
     var done = this.async();
-    var REPLAY_FILE = grunt.option('replay') || 'runs.json';
+    var REPLAY_FILE = grunt.option('name') || 'runs.json';
+    var REPLAY_PATH = path.join(grunt.rootPath,'run','recorded',REPLAY_FILE);
+
     var service = grunt.getService();
-    var tests = require(path.join(grunt.rootPath, REPLAY_FILE));
+    var tests;
+
+    try{
+      tests = require(REPLAY_PATH);
+    }catch(e){
+      grunt.fail.fatal('Unable to find recorded path: ' + REPLAY_PATH);
+    }
+
 
     var runner = new SDK.ScriptRunner(service, {
       credentials: grunt.credentials
@@ -27,7 +36,9 @@ module.exports = function(grunt) {
      * - Validate the output against the config
      * - Display the result to the user
      */
+    var i = 0;
     async.eachSeries(tests, function(test, cb) {
+      i++;
       Util.run({
         method: test.method,
         runner: runner,
@@ -37,6 +48,10 @@ module.exports = function(grunt) {
       }, function(err) {
         if(err) {
           grunt.fail.fatal(err);
+        }
+
+        if(i===tests.length){
+          done();
         }
 
         inquirer.prompt([{
