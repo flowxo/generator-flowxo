@@ -31,7 +31,7 @@ RunUtil.displayScriptOutput = function(grunt,method,data){
 
   // Now go through the output and create a labeled version
   var dataLabelled = Object.keys(data).reduce(function(memo,key){
-    memo[fieldsIdx[key].label] = data[key];
+    memo[fieldsIdx.hasOwnProperty(key) ? fieldsIdx[key].label : '??UNKNOWN??'] = data[key];
     return memo;
   },{});
 
