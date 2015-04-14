@@ -7,13 +7,13 @@ var inquirer = require('inquirer');
 
 module.exports = function(grunt) {
 
-  grunt.registerTask('run:replay', function() {
+  grunt.registerTask('runReplayTask', function() {
     var done = this.async();
     var REPLAY_FILE = grunt.option('replay') || 'runs.json';
+    var service = grunt.getService();
+    var tests = require(path.join(grunt.rootPath, REPLAY_FILE));
 
-    var tests = require(path.join(grunt.rootPath,REPLAY_FILE));
-
-    var runner = new SDK.ScriptRunner(grunt.service, {
+    var runner = new SDK.ScriptRunner(service, {
       credentials: grunt.credentials
     });
 
@@ -31,11 +31,11 @@ module.exports = function(grunt) {
       Util.run({
         method: test.method,
         runner: runner,
-        service: grunt.service,
+        service: service,
         inputs: test.inputs,
         grunt: grunt
-      }, function(err){
-        if(err){
+      }, function(err) {
+        if(err) {
           grunt.fail.fatal(err);
         }
 
@@ -43,7 +43,7 @@ module.exports = function(grunt) {
           type: 'confirm',
           name: 'next',
           message: 'Run next test?'
-        }],function(answers){
+        }], function(answers) {
           return answers.next ? cb(null) : cb('Test Run Aborted');
         });
       });
@@ -53,8 +53,6 @@ module.exports = function(grunt) {
       }
       done();
     });
-
-
-
   });
+  grunt.registerTask('run:replay',['env','runReplayTask']);
 };

@@ -6,24 +6,27 @@ var chai = require('chai');
 chai.use(SDK.Chai);
 
 module.exports = function(grunt) {
-  grunt.registerTask('run', function() {
-    if(grunt.service.methods.length === 0) {
+
+  var service = grunt.getService();
+
+  grunt.registerTask('runTask', function() {
+    if(service.methods.length === 0) {
       grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
     }
 
     var done = this.async();
 
-    var runner = new SDK.ScriptRunner(grunt.service, {
+    var runner = new SDK.ScriptRunner(service, {
       credentials: grunt.credentials
     });
 
     function run() {
       Util.run({
-        service: grunt.service,
+        service: service,
         runner: runner,
         grunt: grunt
       }, function(err) {
-        if(err){
+        if(err) {
           grunt.fail.fatal(err);
         }
 
@@ -39,4 +42,5 @@ module.exports = function(grunt) {
     }
     run();
   });
+  grunt.registerTask('run',['env','runTask']);
 };

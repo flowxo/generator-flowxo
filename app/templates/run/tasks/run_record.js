@@ -7,7 +7,10 @@ var SDK = require('flowxo-sdk'),
 
 module.exports = function(grunt) {
 
-  grunt.registerTask('run:record', function() {
+  grunt.registerTask('runRecordTask', function() {
+
+    var service = grunt.getService();
+
     var done = this.async();
     var REPLAY_FILE = grunt.option('replay') || 'runs.json';
     var tests;
@@ -18,7 +21,7 @@ module.exports = function(grunt) {
       tests = [];
     }
 
-    var runner = new SDK.ScriptRunner(grunt.service, {
+    var runner = new SDK.ScriptRunner(service, {
       credentials: grunt.credentials
     });
 
@@ -69,7 +72,7 @@ module.exports = function(grunt) {
     function run() {
       Util.run({
         runner: runner,
-        service: grunt.service,
+        service: service,
         grunt: grunt
       }, function(err, result, method, inputs) {
         if(err) {
@@ -97,4 +100,5 @@ module.exports = function(grunt) {
 
     run();
   });
+  grunt.registerTask('run:record',['env','runRecordTask']);
 };

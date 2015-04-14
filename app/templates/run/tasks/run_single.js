@@ -6,9 +6,9 @@ var chai = require('chai');
 chai.use(SDK.Chai);
 
 module.exports = function(grunt) {
-  grunt.registerTask('run:single', function() {
+  grunt.registerTask('runSingleTask', function() {
 
-    var service = grunt.service;
+    var service = grunt.getService();
     var credentials = grunt.credentials;
 
     if(service.methods.length === 0) {
@@ -69,4 +69,5 @@ module.exports = function(grunt) {
       done();
     });
   });
+  grunt.registerTask('run:single',['env','runSingleTask']);
 };

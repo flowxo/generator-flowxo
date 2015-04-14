@@ -2,7 +2,6 @@
 
 'use strict';
 var SDK = require('flowxo-sdk');
-var service = require('./lib');
 var chai = require('chai');
 
 chai.use(SDK.Chai);
@@ -21,7 +20,9 @@ module.exports = function(grunt) {
   require('time-grunt')(grunt);
 
   // Service
-  grunt.service = service;
+  grunt.getService = function(){
+    return require('./lib');
+  };
 
   // Allows plugins to require and save files relative to this file
   grunt.rootPath = __dirname;

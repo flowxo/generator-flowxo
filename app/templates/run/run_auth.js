@@ -27,11 +27,6 @@ var cloneObject = function(obj) {
   return cloned;
 };
 
-/*
- * Format credentials for OAuth1
- */
-
-
 /**
  * Generic handler for OAuth
  */
@@ -156,18 +151,18 @@ AuthUtil.refreshOAuth2Token = function(service, credentials, cb) {
     });
   };
 
-  var strategy = new service.auth.strategy(service.auth.options,callback);
+  var strategy = new service.auth.strategy(service.auth.options, callback);
   refresh.use(strategy);
 
-  refresh.requestNewAccessToken(strategy.name,credentials.access_token,function(err,accessToken,refreshToken){
-    if(err){
+  refresh.requestNewAccessToken(strategy.name, credentials.access_token, function(err, accessToken, refreshToken) {
+    if(err) {
       cb('Generating access token failed:' + err);
     }
-    if(!!refreshToken){
+    if(!!refreshToken) {
       credentials.refresh_token = refreshToken;
     }
     credentials.access_token = accessToken;
-    cb(null,credentials);
+    cb(null, credentials);
   });
 };
 

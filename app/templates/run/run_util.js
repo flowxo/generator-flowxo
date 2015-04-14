@@ -131,9 +131,9 @@ RunUtil.run = function(options, cb) {
     /* jshint eqnull: false */
   }
 
-  function addInputsIfDefined(fields,answers,custom) {
-    fields.forEach(function(field){
-      addInputIfDefined(field,answers,custom);
+  function addInputsIfDefined(fields, answers, custom) {
+    fields.forEach(function(field) {
+      addInputIfDefined(field, answers, custom);
     });
   }
 
@@ -158,7 +158,7 @@ RunUtil.run = function(options, cb) {
         // If we've been given them, just set and move on
         if(options.inputs) {
           options.inputs.forEach(function(input) {
-            if(!input.custom){
+            if(!input.custom) {
               grunt.log.writeln(input.label + ': ' + input.value);
             }
           });
@@ -171,7 +171,7 @@ RunUtil.run = function(options, cb) {
           if(err) {
             return callback(err);
           } else {
-            addInputsIfDefined(method.fields.input,answers);
+            addInputsIfDefined(method.fields.input, answers);
             callback(null, method);
           }
         });
@@ -199,8 +199,8 @@ RunUtil.run = function(options, cb) {
 
         // If we've been given some values, use those
         if(options.inputs) {
-          options.inputs.forEach(function(input){
-            if(input.custom){
+          options.inputs.forEach(function(input) {
+            if(input.custom) {
               grunt.log.writeln(input.label + ': ' + input.value);
             }
           });
@@ -213,7 +213,7 @@ RunUtil.run = function(options, cb) {
           if(err) {
             callback(err);
           } else {
-            addInputsIfDefined(customInputFields,answers,true);
+            addInputsIfDefined(customInputFields, answers, true);
             callback(null, method);
           }
         });
