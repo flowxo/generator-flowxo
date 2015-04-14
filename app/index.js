@@ -82,6 +82,9 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   // Methods
   this.mkdir('lib/methods');
 
+  // Run
+  this.bulkDirectory('run','run');
+
   // Tests
   this.mkdir('tests');
   this.template('_bootstrap.js', 'tests/bootstrap.js');
