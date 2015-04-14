@@ -7,7 +7,6 @@ var inquirer = require('inquirer');
 var fs = require('fs');
 var SDK = require('flowxo-sdk');
 var chalk = require('chalk');
-var service = require('./lib');
 var async = require('async');
 var chai = require('chai');
 
@@ -28,6 +27,10 @@ var cloneObject = function(obj) {
     }
   }
   return cloned;
+};
+
+var getService = function() {
+  return require('./lib/index.js');
 };
 
 module.exports = function(grunt) {
@@ -91,7 +94,7 @@ module.exports = function(grunt) {
     }
   });
 
-  function promptMethod(cb) {
+  function promptMethod(service, cb) {
 
     // If we have been passed it in the command-line
     if(grunt.option('method')) {
@@ -176,6 +179,8 @@ module.exports = function(grunt) {
    * Run a method from start to finish
    */
   grunt.registerTask('run', function() {
+    var service = getService();
+
     // Check we have some methods to run
     if(service.methods.length === 0) {
       grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
@@ -208,7 +213,7 @@ module.exports = function(grunt) {
         // Method Selection
         function(callback) {
           logHeader('Method Selection');
-          promptMethod(callback);
+          promptMethod(service, callback);
         },
 
         // Static inputs
@@ -344,6 +349,8 @@ module.exports = function(grunt) {
 
 
   grunt.registerTask('run:single', 'Run a service method', function() {
+    var service = getService();
+
     // Check we have some methods to run
     if(service.methods.length === 0) {
       grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
@@ -487,7 +494,7 @@ module.exports = function(grunt) {
       }
     };
 
-    promptMethod(function(err, method) {
+    promptMethod(service, function(err, method) {
       state.method = method;
       doScriptPrompt(function() {
         runManager(done);
@@ -631,7 +638,7 @@ module.exports = function(grunt) {
   };
 
   grunt.registerTask('authTask', 'Create an authentication', function() {
-    var service = require('./');
+    var service = getService();
     var done = this.async();
 
     var hdlr = authHandlers[service.auth.type];
@@ -642,7 +649,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('authRefreshTask', 'Refresh an access token', function() {
-    var service = require('./');
+    var service = getService();
     var done = this.async();
     var refresh = require('passport-oauth2-refresh');
 
