@@ -3,9 +3,9 @@ var AuthUtil = require('../run_auth');
 
 module.exports = function(grunt) {
 
-  var service = grunt.getService();
 
   grunt.registerTask('authTask', 'Create a set of authentication credentials', function() {
+    var service = grunt.getService();
     var done = this.async();
 
     var hdlr = AuthUtil.handlers[service.auth.type];
@@ -16,6 +16,7 @@ module.exports = function(grunt) {
   });
 
   grunt.registerTask('authRefreshTask', 'Refresh an authentication', function() {
+    var service = grunt.getService();
     var done = this.async();
 
     // Check this is oauth2

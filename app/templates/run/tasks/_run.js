@@ -7,9 +7,9 @@ chai.use(SDK.Chai);
 
 module.exports = function(grunt) {
 
-  var service = grunt.getService();
-
   grunt.registerTask('runTask', function() {
+    var service = grunt.getService();
+
     if(service.methods.length === 0) {
       grunt.fail.fatal('You have no methods to run! Create new methods with `yo flowxo:method`');
     }
