@@ -83,7 +83,16 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   this.mkdir('lib/methods');
 
   // Run
-  this.bulkDirectory('run','run');
+  this.mkdir('run');
+  this.template('run/_run_auth.js','run/run_auth.js');
+  this.template('run/_run_util.js','run/run_util.js');
+
+  this.mkdir('run/tasks');
+  this.template('run/tasks/_auth.js','run/tasks/auth.js');
+  this.template('run/tasks/_run.js','run/tasks/run.js');
+  this.template('run/tasks/_run_record.js','run/tasks/run_record.js');
+  this.template('run/tasks/_run_replay.js','run/tasks/run_replay.js');
+  this.template('run/tasks/_run_single.js','run/tasks/run_single.js');
 
   // Tests
   this.mkdir('tests');
