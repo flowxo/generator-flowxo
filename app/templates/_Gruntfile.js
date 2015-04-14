@@ -126,8 +126,16 @@ module.exports = function(grunt) {
     var prompts = inputs.map(function(input) {
       var prompt = {
         name: input.key,
-        message: input.label + ':'
+        message: input.label
       };
+
+      // Make it required if necessary
+      if(input.required) {
+        prompt.message = prompt.message + '*';
+        prompt.validate = function(item) {
+          return !!item;
+        };
+      }
 
       if(input.type === 'select') {
         prompt.type = 'list';
@@ -143,17 +151,13 @@ module.exports = function(grunt) {
             value: ''
           });
         }
-      } else if(input.type === 'text') {
-        prompt.type = 'input';
+      } else if(input.type === 'datetime') {
+        prompt.message += ' ⌚';
+      } else if(input.type === 'boolean') {
+        prompt.message += ' ☯';
       }
 
-      // Make it required if necessary
-      if(input.required) {
-        prompt.message = prompt.message + '*';
-        prompt.validate = function(item) {
-          return !!item;
-        };
-      }
+      prompt.message = prompt.message += ' :';
 
       // Support for default values
       if(input.default) {
@@ -183,8 +187,22 @@ module.exports = function(grunt) {
     });
 
     var runIt = function() {
-      var inputs = {},
+      var inputs = [],
           outputs = [];
+
+      var addInputIfDefined = function(field, answers) {
+        var ans = answers[field.key];
+
+        /* jshint eqnull: true */
+        if(ans != null && ans !== '') {
+          inputs.push({
+            key: field.key,
+            type: field.type,
+            value: answers[field.key]
+          });
+        }
+        /* jshint eqnull: false */
+      };
 
       async.waterfall([
         // Method Selection
@@ -201,9 +219,9 @@ module.exports = function(grunt) {
               if(err) {
                 callback(err);
               } else {
-                for(var a in answers) {
-                  inputs[a] = answers[a];
-                }
+                method.fields.input.forEach(function(field) {
+                  addInputIfDefined(field, answers);
+                });
                 callback(null, method);
               }
             });
@@ -230,9 +248,9 @@ module.exports = function(grunt) {
                 if(err) {
                   callback(err);
                 } else {
-                  for(var a in answers) {
-                    inputs[a] = answers[a];
-                  }
+                  customInputs.forEach(function(field) {
+                    addInputIfDefined(field, answers);
+                  });
                   callback(null, method);
                 }
               });
@@ -650,7 +668,7 @@ module.exports = function(grunt) {
 
     refresh.requestNewAccessToken(strategy.name, grunt.credentials.access_token, function(err, accessToken, refreshToken) {
       if(err) {
-        grunt.fail.fatal('Generatring access token failed:' + err);
+        grunt.fail.fatal('Generating access token failed:' + err);
       }
 
       if(typeof refreshToken !== 'undefined') {
