@@ -55,6 +55,8 @@ module.exports = function(grunt) {
       },
     ], function(err, result) {
       // Unless we have the --no-check-outputs option on
+      Util.displayScriptData(grunt, result);
+
       if(!grunt.option('no-check-outputs')) {
         if(script === 'run') {
           chai.expect(result).to.matchConfig(method);
@@ -64,8 +66,7 @@ module.exports = function(grunt) {
           chai.expect(result).to.be.flowxo.output.fields;
         }
       }
-      Util.header(grunt, 'Script Output', 'green');
-      Util.output(grunt, result);
+
       done();
     });
   });

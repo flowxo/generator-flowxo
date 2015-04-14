@@ -16,8 +16,27 @@ RunUtil.header = function(grunt, msg, color) {
   grunt.log.writeln(line);
 };
 
-RunUtil.output = function(grunt, data) {
+RunUtil.displayScriptData = function(grunt, data) {
+  RunUtil.header(grunt,'DATA:','green');
   grunt.log.writeln(chalk.cyan(JSON.stringify(data, null, 2)));
+
+};
+
+RunUtil.displayScriptOutput = function(grunt,method,data){
+  // First create an indexed hash of fields
+  var fieldsIdx = method.fields.output.reduce(function(data,f){
+    data[f.key] = f;
+    return data;
+  },{});
+
+  // Now go through the output and create a labeled version
+  var dataLabelled = Object.keys(data).reduce(function(memo,key){
+    memo[fieldsIdx[key].label] = data[key];
+    return memo;
+  },{});
+
+  RunUtil.header(grunt,'OUTPUT:','green');
+  grunt.log.writeln(chalk.cyan(JSON.stringify(dataLabelled, null, 2)));
 };
 
 RunUtil.promptMethod = function(service, cb) {
@@ -255,9 +274,19 @@ RunUtil.run = function(options, cb) {
       });
     },
 
-    // validation
+    // validation and output
     function(method, result, callback) {
       method.fields.output = (method.fields.output || []).concat(outputs);
+      RunUtil.displayScriptData(grunt,result);
+      RunUtil.displayScriptOutput(grunt,method,result);
+
+      try{
+        chai.expect(result).to.matchConfig(method);
+      }catch(e){
+        RunUtil.header(grunt,'VALIDATION:','red');
+        grunt.fail.fatal(e);
+      }
+      RunUtil.header(grunt,'VALIDATION: Success','green');
       callback(null, method, result);
     }
   ], function(err, method, result) {
@@ -265,10 +294,8 @@ RunUtil.run = function(options, cb) {
       RunUtil.header(grunt, 'Script Error', 'red');
       grunt.fail.fatal(err);
     }
-    if(result) {
-      RunUtil.header(grunt, 'Script Output', 'green');
-      RunUtil.output(grunt, result);
-    }
+    // Callback enough data so the caller can record
+    // the run
     cb(err, result, method, inputs);
   });
 };
