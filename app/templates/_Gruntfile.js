@@ -1,7 +1,8 @@
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
-var SDK = require('flowxo-sdk');
-var chai = require('chai');
+
+var SDK = require('flowxo-sdk'),
+    chai = require('chai');
 
 chai.use(SDK.Chai);
 
@@ -12,6 +13,11 @@ var CREDENTIALS_FILENAME = 'credentials.json';
 
 module.exports = function(grunt) {
 
+  // Fix grunt options
+  // Can remove if using grunt 0.5
+  // https://github.com/gruntjs/grunt/issues/908
+  require('nopt-grunt-fix')(grunt);
+
   // Load grunt tasks automatically
   require('load-grunt-tasks')(grunt);
 
@@ -19,7 +25,7 @@ module.exports = function(grunt) {
   require('time-grunt')(grunt);
 
   // Service
-  grunt.getService = function(){
+  grunt.getService = function() {
     return require('./lib');
   };
 
@@ -33,6 +39,7 @@ module.exports = function(grunt) {
     grunt.credentials = {};
   }
 
+  // Load the internal tasks
   grunt.loadTasks('run/tasks');
 
   // Define the configuration for all the tasks
@@ -78,13 +85,9 @@ module.exports = function(grunt) {
 
   // Authentication Tasks
   grunt.registerTask('auth', ['env', 'authTask']);
-  grunt.registerTask('auth:refresh', ['env', 'authRefreshTask']);
 
   // Run Tasks
-  grunt.registerTask('run',['env','runTask']);
-  grunt.registerTask('run:record',['env','runRecordTask']);
-  grunt.registerTask('run:replay',['env','runReplayTask']);
-  grunt.registerTask('run:single',['env','runSingleTask']);
+  grunt.registerTask('run', ['env', 'runTask']);
 
   // Test Tasks
   grunt.registerTask('test', ['env', 'mochaTest']);

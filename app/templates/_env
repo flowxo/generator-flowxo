@@ -1,2 +1,2 @@
-<% if(auth.type.indexOf('oauth')===0) { %><%= slug.toUpperCase()%><% if(auth.type === 'oauth1') { %>_KEY=<% } else { %>_ID=<% } %>
-<%= slug.toUpperCase()%>_SECRET=<% } %>
+<% if(auth.type.indexOf('oauth')===0) { %><%= slugUpperCased %><% if(auth.type === 'oauth1') { %>_KEY=<% } else { %>_ID=<% } %>
+<%= slugUpperCased %>_SECRET=<% } %>
