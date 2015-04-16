@@ -36,6 +36,7 @@ FlowXOGenerator.prototype.prompting = function() {
   this.prompt(prompts, function(props) {
     self.name = props.name;
     self.slug = _.snakeCase(self.name);
+    self.slugUpperCased = self.slug.toUpperCase();
     self.auth = {
       type: props.auth_type
     };
@@ -81,6 +82,21 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
 
   // Methods
   this.mkdir('lib/methods');
+
+  // Run
+  this.mkdir('run');
+
+  this.mkdir('run/recorded');
+  this.template('run/recorded/_runs.json','run/recorded/runs.json');
+
+  this.mkdir('run/utils');
+  this.template('run/utils/_auth.js','run/utils/auth.js');
+  this.template('run/utils/_common.js','run/utils/common.js');
+  this.template('run/utils/_run.js','run/utils/run.js');
+
+  this.mkdir('run/tasks');
+  this.template('run/tasks/_auth.js','run/tasks/auth.js');
+  this.template('run/tasks/_run.js','run/tasks/run.js');
 
   // Tests
   this.mkdir('tests');
