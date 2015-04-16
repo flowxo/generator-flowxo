@@ -314,7 +314,7 @@ RunUtil.runSingleScript = function(options, cb) {
       // If it's a run script, do some inputs
       script = userScript;
       if(userScript === 'run' && method.fields.input) {
-        RunUtil.promptFields(method.fields.input, fieldPromptOptions, callback);
+        CommonUtil.promptFields(method.fields.input, fieldPromptOptions, callback);
       } else {
         callback(null, {});
       }
