@@ -30,9 +30,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/flowxo/<%= serviceName %>"
+    "url": "https://github.com/flowxo/<%= serviceName %>"
   },
   "bugs": {
-    "url": "https://bitbucket.org/flowxo/<%= serviceName %>/issues"
+    "url": "https://github.com/flowxo/<%= serviceName %>/issues"
   }
 }
