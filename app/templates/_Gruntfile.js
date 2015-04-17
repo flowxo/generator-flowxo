@@ -1,16 +1,6 @@
 // Generated on <%= (new Date).toISOString().split('T')[0] %> using <%= pkg.name %> <%= pkg.version %>
 'use strict';
 
-var SDK = require('flowxo-sdk'),
-    chai = require('chai');
-
-chai.use(SDK.Chai);
-
-/******************************************************************************
- * Global Vars
- ******************************************************************************/
-var CREDENTIALS_FILENAME = 'credentials.json';
-
 module.exports = function(grunt) {
 
   // Fix grunt options
@@ -24,23 +14,8 @@ module.exports = function(grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
-  // Service
-  grunt.getService = function() {
-    return require('./lib');
-  };
-
-  // Allows plugins to require and save files relative to this file
-  grunt.rootPath = __dirname;
-
-  // Credentials
-  try {
-    grunt.credentials = require('./' + CREDENTIALS_FILENAME);
-  } catch(e) {
-    grunt.credentials = {};
-  }
-
-  // Load the internal tasks
-  grunt.loadTasks('run/tasks');
+  // Load the Flow XO tasks
+  grunt.loadNpmTasks('flowxo-sdk');
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -80,14 +55,28 @@ module.exports = function(grunt) {
       tests: {
         src: ['tests/**/*.js'],
       }
+    },
+    flowxo: {
+      options: {
+        credentialsFile: 'credentials.json',
+        getService: function() {
+          return require('./lib');
+        },
+      },
+      auth: {},
+      run: {
+        options: {
+          runsFolder: 'runs',
+        }
+      }
     }
   });
 
   // Authentication Tasks
-  grunt.registerTask('auth', ['env', 'authTask']);
+  grunt.registerTask('auth', ['env', 'flowxo:auth']);
 
   // Run Tasks
-  grunt.registerTask('run', ['env', 'runTask']);
+  grunt.registerTask('run', ['env', 'flowxo:run']);
 
   // Test Tasks
   grunt.registerTask('test', ['env', 'mochaTest']);
