@@ -53,7 +53,7 @@ FlowXOMethodGenerator.prototype.prompts = function() {
       type: 'list',
       name: 'type',
       message: 'What type of method is it?',
-      choices: ['Action', 'Poller','Webhook'],
+      choices: ['Action', 'Poller', 'Webhook'],
       filter: function(val) {
         return val.toLowerCase();
       },
@@ -73,7 +73,7 @@ FlowXOMethodGenerator.prototype.prompts = function() {
         name: 'Custom Output',
         value: 'output'
       }],
-      when: function(answers){
+      when: function(answers) {
         // Do not run on webhooks
         answers.scripts = [];
         return answers.type !== 'webhook';
@@ -90,7 +90,7 @@ FlowXOMethodGenerator.prototype.fieldPrompts = function fieldPrompts() {
 };
 
 FlowXOMethodGenerator.prototype.methodFiles = function coreFiles() {
-  var methodDir = path.join('lib','methods', this.slug);
+  var methodDir = path.join('lib', 'methods', this.slug);
   this.mkdir(methodDir);
 
   // First write the tests ;)

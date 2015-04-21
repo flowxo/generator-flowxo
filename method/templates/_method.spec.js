@@ -6,8 +6,8 @@ describe('<%= name %>', function() {
       var options = {};
       this.runner.run('<%= slug %>', 'run', options, function(err, output) {
         expect(err).not.to.exist;<% if(type === 'poller') { %>
-        expect(output).to.be.an('array'); <% } else { %>
-        expect(output).to.be.an('object'); <% } %>
+        expect(output).to.be.an('array');<% } else { %>
+        expect(output).to.be.an('object');<% } %>
         done();
       });
     });

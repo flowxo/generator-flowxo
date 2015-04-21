@@ -16,7 +16,7 @@ var service = new sdk.Service({
       required: true
     }<% if(i < (auth.fields.length-1)) { %>,<% } %><% }); %>]
   },
-  scripts:{
+  scripts: {
     ping: require('./ping')
   }<% } else { %>
   auth: {
@@ -30,7 +30,7 @@ var service = new sdk.Service({
     strategy: null,
 
     // These options will be passed to the strategy when registering.
-    <% if(auth.type === 'oauth1') { %>// An OAuth 1.0 or 1.0a strategy requires `consumerKey` and `consumerSecret`
+<% if(auth.type === 'oauth1') { %>    // An OAuth 1.0 or 1.0a strategy requires `consumerKey` and `consumerSecret`
     // to be passed. Fill in your key and secret for this service in the
     // .env file and they will be populated at runtime below.
     // If your strategy requires any other options to be passed when registering,
@@ -39,7 +39,7 @@ var service = new sdk.Service({
       consumerKey: process.env.<%= slug.toUpperCase()%>_KEY,
       consumerSecret: process.env.<%= slug.toUpperCase()%>_SECRET
     },
-    <% } else if (auth.type === 'oauth2') { %>// An OAuth 2.0 strategy requires `clientID` and `clientSecret`
+<% } else if (auth.type === 'oauth2') { %>    // An OAuth 2.0 strategy requires `clientID` and `clientSecret`
     // to be passed. Fill in your ID and secret for this service in the
     // .env file and they will be populated at runtime below.
     // If your strategy requires any other options to be passed when registering,
@@ -49,7 +49,7 @@ var service = new sdk.Service({
       clientSecret: process.env.<%= slug.toUpperCase()%>_SECRET,
       state: true
     },
-    <% } %>
+<% } %>
     // Authentication parameters to be used.
     // These are sent when making an OAuth request.
     // For example, where an OAuth 2.0 API defines access scopes,
