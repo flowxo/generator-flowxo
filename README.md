@@ -7,7 +7,7 @@ Please refer to the [Flow XO SDK documentation](http://github.com/flowxo/flowxo-
 
 ## Installation
 ```
-npm install -g yo flowxo-generator
+npm install -g yo generator-flowxo
 ```
 
 ## Usage
