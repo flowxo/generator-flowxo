@@ -22,9 +22,9 @@
     "npm": ">=1.2.10"
   },
   "dependencies": {
-    "chalk": "^0.5.1",
-    "lodash": "^3.1.0",
+    "chalk": "^1.0.0",
+    "lodash": "^3.8.0",
     "log-symbols": "^1.0.2",
-    "yeoman-generator": "^0.18.8"
+    "yeoman-generator": "^0.19.2"
   }
 }
