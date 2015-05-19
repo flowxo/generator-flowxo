@@ -5,7 +5,7 @@ var config = {
   slug: '<%= slug %>',
   type: '<%= type %>',
   kind: '<%= kind %>',
-  <% if(type !== 'webhook'){ %>scripts: {<% if(scripts.indexOf('input')!==-1){ %>
+  scripts: {<% if(scripts.indexOf('input')!==-1){ %>
     input: require('./input'),<% } %><% if(scripts.indexOf('output')!==-1){%>
     output: require('./output'),<% } %>
     run: require('./run')
@@ -13,7 +13,8 @@ var config = {
   fields: {
     input: [],
     output: []
-  }<% } else { %>help: {
+  }<% if(type === 'webhook') {%>,
+  help: {
     webhook: {
       // Provide instruction on how the user should configure the service e.g.
       // config:[

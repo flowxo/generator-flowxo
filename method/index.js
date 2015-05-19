@@ -33,6 +33,7 @@ FlowXOMethodGenerator.prototype.prompts = function() {
       message: 'What is the user-visible name of the method e.g. Add a Document',
       default: self.name,
       validate: function(name) {
+        // Ensure we have selected an answer
         return !!name;
       }
     },
@@ -45,6 +46,7 @@ FlowXOMethodGenerator.prototype.prompts = function() {
         return _.snakeCase(answers.name);
       },
       validate: function(slug) {
+        // Ensure we have selected an answer
         return !!slug;
       }
     },
@@ -53,11 +55,18 @@ FlowXOMethodGenerator.prototype.prompts = function() {
       type: 'list',
       name: 'type',
       message: 'What type of method is it?',
-      choices: ['Action', 'Poller', 'Webhook'],
-      filter: function(val) {
-        return val.toLowerCase();
-      },
+      choices: [{
+        name: 'Poller Trigger',
+        value: 'poller',
+      }, {
+        name: 'Webhook Trigger',
+        value: 'webhook'
+      }, {
+        name: 'Action',
+        value: 'action'
+      }],
       validate: function(type) {
+        // Ensure we have selected an answer
         return !!type;
       }
     },
