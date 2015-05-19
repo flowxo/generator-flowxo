@@ -5,6 +5,8 @@ var path = require('path');
 var yeoman = require('yeoman-generator');
 var _ = require('lodash');
 var chalk = require('chalk');
+var mkdirp = require('mkdirp');
+var wiring = require('html-wiring');
 var FlowXOUtils = require('../utils');
 
 var SERVICES_ROOT = 'flowxo-services-';
@@ -20,7 +22,7 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator() {
     required: false
   });
 
-  this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
+  this.pkg = JSON.parse(wiring.readFileAsString(path.join(__dirname, '../package.json')));
   this.on('end', function() {
     this.log(chalk.cyan('\nYour service has been generated in the ' + this.serviceName + ' folder.\n'));
     this.log(chalk.cyan(FlowXOUtils.messages.whatNext[this.auth.type]));
@@ -75,7 +77,7 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   this.template('_env', '.env');
 
   // Lib
-  this.mkdir('lib');
+  mkdirp('lib');
   if(this.auth.type === 'credentials') {
     this.template('_ping.js', 'lib/ping.js');
   }
@@ -83,10 +85,10 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   this.template('_index.js', 'lib/index.js');
 
   // Methods
-  this.mkdir('lib/methods');
+  mkdirp('lib/methods');
 
   // Tests
-  this.mkdir('tests');
+  mkdirp('tests');
   this.template('_bootstrap.js', 'tests/bootstrap.js');
   this.template('_helpers.js', 'tests/helpers.js');
   this.template('_service.spec.js', 'tests/service.spec.js');

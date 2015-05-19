@@ -2,14 +2,21 @@
   "name": "generator-flowxo",
   "version": "1.0.0",
   "description": "Flow XO Service Generator.",
-  "author": {
-    "name": "Joe Woodhouse",
-    "email": "joewoodhouse30@gmail.com"
-  },
+  "author": "Flow XO Ltd.",
+  "contributors": [
+    {
+      "name": "Joe Woodhouse",
+      "email": "joewoodhouse30@gmail.com"
+    },
+    {
+      "name": "Tom Spencer",
+      "email": "fiznool@gmail.com"
+    }
+  ],
   "main": "app/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/flowxo/flowxo-generator.git"
+    "url": "https://github.com/flowxo/generator-flowxo.git"
   },
   "scripts": {
     "test": "mocha"
@@ -23,8 +30,10 @@
   },
   "dependencies": {
     "chalk": "^1.0.0",
+    "html-wiring": "^1.1.0",
     "lodash": "^3.8.0",
     "log-symbols": "^1.0.2",
-    "yeoman-generator": "^0.19.2"
+    "mkdirp": "^0.5.1",
+    "yeoman-generator": "^0.20.1"
   }
 }

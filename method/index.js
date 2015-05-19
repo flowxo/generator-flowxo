@@ -2,6 +2,7 @@
 var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
+var mkdirp = require('mkdirp');
 var _ = require('lodash');
 
 var FlowXOMethodGenerator = module.exports = function FlowXOMethodGenerator() {
@@ -100,7 +101,7 @@ FlowXOMethodGenerator.prototype.fieldPrompts = function fieldPrompts() {
 
 FlowXOMethodGenerator.prototype.methodFiles = function coreFiles() {
   var methodDir = path.join('lib', 'methods', this.slug);
-  this.mkdir(methodDir);
+  mkdirp(methodDir);
 
   // First write the tests ;)
   this.template('_method.spec.js', 'tests/' + this.slug + '.spec.js');
