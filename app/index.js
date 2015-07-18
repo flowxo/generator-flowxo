@@ -70,6 +70,7 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   this.template('_gitignore', '.gitignore');
   this.template('_jshintrc', '.jshintrc');
   this.template('_jsbeautifyrc', '.jsbeautifyrc');
+  this.template('_editorconfig', '.editorconfig');
   this.template('_package.json', 'package.json');
   this.template('_Gruntfile.js', 'Gruntfile.js');
   this.template('_CHANGELOG.md', 'CHANGELOG.md');
