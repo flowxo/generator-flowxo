@@ -14,7 +14,7 @@ npm install -g yo generator-flowxo
 ```
 yo flowxo
 ```
-Scaffolds a new Flow XO Service
+Scaffolds a new Flow XO Service into a new folder.
 
 ```
 yo flowxo:method
