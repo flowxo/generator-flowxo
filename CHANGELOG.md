@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.0.5] - 2015-08-07
+### Added
+- `.editorconfig` to scaffolded service.
+
 ## [1.0.4] - 2015-08-07
 ### Updated
 - Scaffolded package.json to update service's dependencies.
