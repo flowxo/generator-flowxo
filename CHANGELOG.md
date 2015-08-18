@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] - 2015-08-18
+### Removed
+Flow XO services are no longer unit testable, instead the preferred way of testing is via the `grunt run` command. The generator has been updated so that the unit test files are no longer scaffolded.
+
+This is a breaking change, hence the major version number bump.
+
 ## [1.0.5] - 2015-08-07
 ### Added
 - `.editorconfig` to scaffolded service.
@@ -28,6 +34,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Initial release of the generator.
 
+[2.0.0]: https://github.com/flowxo/generator-flowxo/compare/v1.0.5...v2.0.0
+[1.0.5]: https://github.com/flowxo/generator-flowxo/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/flowxo/generator-flowxo/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/flowxo/generator-flowxo/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/flowxo/generator-flowxo/compare/v1.0.1...v1.0.2
