@@ -2,7 +2,7 @@
   "name": "generator-flowxo",
   "version": "1.0.5",
   "description": "Flow XO Service Generator.",
-  "author": "Flow XO Ltd.",
+  "author": "Flow XO Ltd. <support@flowxo.com>",
   "contributors": [
     {
       "name": "Joe Woodhouse",
@@ -11,15 +11,20 @@
     {
       "name": "Tom Spencer",
       "email": "fiznool@gmail.com"
+    },
+    {
+      "name": "John Byrne",
+      "email": "john.byrne@interpos.co.uk"
+    },
+    {
+      "name": "Peter Sandor",
+      "email": "contact@petersandor.name"
     }
   ],
   "main": "app/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/flowxo/generator-flowxo.git"
-  },
-  "scripts": {
-    "test": "mocha"
   },
   "engines": {
     "node": ">=0.8.0",
@@ -32,5 +37,6 @@
     "log-symbols": "^1.0.2",
     "mkdirp": "^0.5.1",
     "yeoman-generator": "^0.20.2"
-  }
+  },
+  "license": "MIT"
 }
