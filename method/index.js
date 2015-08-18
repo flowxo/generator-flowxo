@@ -103,9 +103,6 @@ FlowXOMethodGenerator.prototype.methodFiles = function coreFiles() {
   var methodDir = path.join('lib', 'methods', this.slug);
   mkdirp(methodDir);
 
-  // First write the tests ;)
-  this.template('_method.spec.js', 'tests/' + this.slug + '.spec.js');
-
   this.destinationRoot(methodDir);
   this.template('_config.js', 'config.js');
   this.template('_run.js', 'run.js');

@@ -88,12 +88,6 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   // Methods
   mkdirp('lib/methods');
 
-  // Tests
-  mkdirp('tests');
-  this.template('_bootstrap.js', 'tests/bootstrap.js');
-  this.template('_helpers.js', 'tests/helpers.js');
-  this.template('_service.spec.js', 'tests/service.spec.js');
-  this.template('_jshintrc_test', 'tests/.jshintrc');
 };
 
 FlowXOGenerator.prototype.installDeps = function installDeps() {
