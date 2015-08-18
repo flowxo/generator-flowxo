@@ -40,11 +40,8 @@ grunt init
 # Generate a new method
 yo flowxo:method
 
-# Watch files for changes, running style checks and unit tests on change
+# Watch files for changes and running style checks on change
 grunt
-
-# Run unit tests
-grunt test
 
 # Create/renew an authentication file
 grunt auth
