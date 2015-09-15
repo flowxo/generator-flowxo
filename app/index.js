@@ -8,14 +8,21 @@ var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var wiring = require('html-wiring');
 var FlowXOUtils = require('../utils');
+var pjson = require('../package.json');
 
 var SERVICES_ROOT = 'flowxo-services-';
 
 var FlowXOGenerator = module.exports = function FlowXOGenerator() {
   yeoman.generators.Base.apply(this, arguments);
 
+  this.option('debug');
+
   // Greet the user
-  console.log(FlowXOUtils.greeting);
+  this.log(FlowXOUtils.greeting);
+
+  if(this.options.debug) {
+    this.log(chalk.gray('version: ' + pjson.version + '\n'));
+  }
 
   this.argument('service', {
     type: String,
