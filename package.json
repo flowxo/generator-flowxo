@@ -1,6 +1,6 @@
 {
   "name": "generator-flowxo",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Flow XO Service Generator.",
   "author": "Flow XO Ltd. <support@flowxo.com>",
   "contributors": [
@@ -31,12 +31,12 @@
     "npm": ">=1.2.10"
   },
   "dependencies": {
-    "chalk": "^1.1.0",
+    "chalk": "^1.1.1",
     "html-wiring": "^1.2.0",
     "lodash": "^3.10.1",
     "log-symbols": "^1.0.2",
     "mkdirp": "^0.5.1",
-    "yeoman-generator": "^0.20.2"
+    "yeoman-generator": "^0.20.3"
   },
   "license": "MIT"
 }
