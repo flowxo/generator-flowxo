@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.2] - 2015-09-22
+### Updated
+- SDK dependency.
+
 ## [2.0.1] - 2015-09-15
 ### Added
 - `debug` flag for printing out version number.
@@ -42,6 +46,7 @@ This is a breaking change, hence the major version number bump.
 ### Added
 - Initial release of the generator.
 
+[2.0.2]: https://github.com/flowxo/generator-flowxo/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/flowxo/generator-flowxo/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/flowxo/generator-flowxo/compare/v1.0.5...v2.0.0
 [1.0.5]: https://github.com/flowxo/generator-flowxo/compare/v1.0.4...v1.0.5
