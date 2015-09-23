@@ -50,7 +50,7 @@ FlowXOGenerator.prototype.prompting = function() {
     self.auth = {
       type: props.auth_type
     };
-    self.serviceName = SERVICES_ROOT + _.kebabCase(self.name);
+    self.serviceName = SERVICES_ROOT + _.kebabCase(self.name.toLowerCase());
     self.destinationRoot(self.serviceName);
     done();
   });
