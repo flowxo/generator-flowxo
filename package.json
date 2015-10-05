@@ -27,7 +27,7 @@
     "url": "https://github.com/flowxo/generator-flowxo.git"
   },
   "engines": {
-    "node": "^0.12.7",
+    "node": ">=0.12.0",
     "npm": "^2.14.0"
   },
   "dependencies": {
