@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.1] - 2015-09-23
+### Updated
+- SDK dependency.
+- Service Node engine.
+- Service version set to 0.0.0 by default.
+
 ## [2.1.0] - 2015-09-23
 ### Fixed
 - Service names with capital letters in the middle of the name are now slugified correctly (e.g. `WooCommerce` is now slugified to `woocommerce` instead of `woo_commerce`).
