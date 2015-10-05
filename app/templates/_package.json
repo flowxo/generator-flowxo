@@ -1,9 +1,9 @@
 {
   "name": "<%= serviceName %>",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "flowxo-sdk": "^2.1.0"
+    "flowxo-sdk": "^3.0.0"
   },
   "main": "lib/index.js",
   "devDependencies": {
@@ -18,7 +18,7 @@
     "time-grunt": "^1.2.1"
   },
   "engines": {
-    "node": ">=0.12.0"
+    "node": "^0.12.7"
   },
   "repository": {
     "type": "git",
