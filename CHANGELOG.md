@@ -2,7 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.1.1] - 2015-09-23
+## [2.1.2] - 2015-10-05
+### Added
+- Support for node v4.
+
+## [2.1.1] - 2015-10-05
 ### Updated
 - SDK dependency.
 - Service Node engine.
