@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.4] - 2015-10-19
+### Fixed
+- Update notifier being called on startup when no update is available.
+- Dependency not present in `package.json`.
+
 ## [2.1.3] - 2015-10-19
 ### Added
 - Notify if an update is available.
