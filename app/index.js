@@ -14,6 +14,28 @@ var stripAnsi = require('strip-ansi');
 
 var SERVICES_ROOT = 'flowxo-services-';
 
+var getUpdateMessage = function(update) {
+  var updateMessagePart1 = 'Update available: '  + chalk.green(update.latest) + chalk.gray(' (current: ' + pjson.version + ')');
+  var updateMessagePart2 = 'Run ' + chalk.cyan('npm update -g ' + pjson.name) + ' to update.';
+
+  var part1Len = stripAnsi(updateMessagePart1).length,
+      part2Len = stripAnsi(updateMessagePart2).length,
+      len;
+  if(part1Len > part2Len) {
+    updateMessagePart2 += Array(part1Len - part2Len + 1).join(' ');
+    len = part1Len + 1;
+  } else if(part2Len > part1Len) {
+    updateMessagePart1 += Array(part2Len - part1Len + 1).join(' ');
+    len = part2Len + 1;
+  }
+  return [
+    chalk.yellow(' ┌──' + Array(len).join('─') + '──┐'),
+    chalk.yellow(' │  ') + updateMessagePart1 + chalk.yellow('  │'),
+    chalk.yellow(' │  ') + updateMessagePart2 + chalk.yellow('  │'),
+    chalk.yellow(' └──' + Array(len).join('─') + '──┘')
+  ].join('\n');
+};
+
 var FlowXOGenerator = module.exports = function FlowXOGenerator() {
   yeoman.generators.Base.apply(this, arguments);
 
@@ -33,7 +55,7 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator() {
   }
 
   if(notifier.update) {
-    this.updateAvailable(notifier.update);
+    this.log(getUpdateMessage(notifier.update));
   }
 
   this.argument('service', {
@@ -50,28 +72,6 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator() {
 };
 
 util.inherits(FlowXOGenerator, yeoman.generators.Base);
-
-FlowXOGenerator.prototype.updateAvailable = function(update) {
-  var updateMessagePart1 = 'Update available: '  + chalk.green(update.latest) + chalk.gray(' (current: ' + pjson.version + ')');
-  var updateMessagePart2 = 'Run ' + chalk.cyan('npm update -g ' + pjson.name) + ' to update.';
-
-  var part1Len = stripAnsi(updateMessagePart1).length,
-      part2Len = stripAnsi(updateMessagePart2).length,
-      len;
-  if(part1Len > part2Len) {
-    updateMessagePart2 += Array(part1Len - part2Len + 1).join(' ');
-    len = part1Len + 1;
-  } else if(part2Len > part1Len) {
-    updateMessagePart1 += Array(part2Len - part1Len + 1).join(' ');
-    len = part2Len + 1;
-  }
-  console.log([
-    chalk.yellow(' ┌──' + Array(len).join('─') + '──┐'),
-    chalk.yellow(' │  ') + updateMessagePart1 + chalk.yellow('  │'),
-    chalk.yellow(' │  ') + updateMessagePart2 + chalk.yellow('  │'),
-    chalk.yellow(' └──' + Array(len).join('─') + '──┘')
-  ].join('\n'));
-};
 
 FlowXOGenerator.prototype.prompting = function() {
   var done = this.async();
