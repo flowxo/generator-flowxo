@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.5] - 2015-10-27
+### Updated
+- Simplified update notification.
+- Updated helper text when creating a credentials-based service.
+- Bumped SDK version for scaffolded service.
+- Changed repo location to bitbucket for scaffolded service.
+
 ## [2.1.4] - 2015-10-19
 ### Fixed
 - Update notifier being called on startup when no update is available.
@@ -74,6 +81,8 @@ This is a breaking change, hence the major version number bump.
 ### Added
 - Initial release of the generator.
 
+[2.1.5]: https://github.com/flowxo/generator-flowxo/compare/v2.1.4...v2.1.5
+[2.1.4]: https://github.com/flowxo/generator-flowxo/compare/v2.1.3...v2.1.4
 [2.1.3]: https://github.com/flowxo/generator-flowxo/compare/v2.1.2...v2.1.3
 [2.1.2]: https://github.com/flowxo/generator-flowxo/compare/v2.1.1...v2.1.2
 [2.1.1]: https://github.com/flowxo/generator-flowxo/compare/v2.1.0...v2.1.1
