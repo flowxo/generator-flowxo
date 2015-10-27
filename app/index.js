@@ -8,55 +8,26 @@ var chalk = require('chalk');
 var mkdirp = require('mkdirp');
 var wiring = require('html-wiring');
 var FlowXOUtils = require('../utils');
-var pjson = require('../package.json');
+var pkg = require('../package.json');
 var updateNotifier  = require('update-notifier');
-var stripAnsi = require('strip-ansi');
 
 var SERVICES_ROOT = 'flowxo-services-';
-
-var getUpdateMessage = function(update) {
-  var updateMessagePart1 = 'Update available: '  + chalk.green(update.latest) + chalk.gray(' (current: ' + pjson.version + ')');
-  var updateMessagePart2 = 'Run ' + chalk.cyan('npm update -g ' + pjson.name) + ' to update.';
-
-  var part1Len = stripAnsi(updateMessagePart1).length,
-      part2Len = stripAnsi(updateMessagePart2).length,
-      len;
-  if(part1Len > part2Len) {
-    updateMessagePart2 += Array(part1Len - part2Len + 1).join(' ');
-    len = part1Len + 1;
-  } else if(part2Len > part1Len) {
-    updateMessagePart1 += Array(part2Len - part1Len + 1).join(' ');
-    len = part2Len + 1;
-  }
-  return [
-    chalk.yellow(' ┌──' + Array(len).join('─') + '──┐'),
-    chalk.yellow(' │  ') + updateMessagePart1 + chalk.yellow('  │'),
-    chalk.yellow(' │  ') + updateMessagePart2 + chalk.yellow('  │'),
-    chalk.yellow(' └──' + Array(len).join('─') + '──┘')
-  ].join('\n');
-};
 
 var FlowXOGenerator = module.exports = function FlowXOGenerator() {
   yeoman.generators.Base.apply(this, arguments);
 
   this.option('debug');
 
-  // Checks for available update and returns an instance
-  var notifier = updateNotifier({
-    pkg: pjson,
-    updateCheckInterval: 1000 * 60 // Every hour
-  });
-
   // Greet the user
   this.log(FlowXOUtils.greeting);
 
   if(this.options.debug) {
-    this.log(chalk.gray('version: ' + pjson.version + '\n'));
+    this.log(chalk.gray('version: ' + pkg.version + '\n'));
   }
 
-  if(notifier.update) {
-    this.log(getUpdateMessage(notifier.update));
-  }
+  // Checks for generator update and prints a notification
+  updateNotifier({ pkg: pkg })
+    .notify({ defer: false });
 
   this.argument('service', {
     type: String,
