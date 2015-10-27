@@ -67,7 +67,7 @@ FlowXOGenerator.prototype.authPrompting = function authPrompting() {
   var self = this;
 
   if(this.auth.type === 'credentials') {
-    this.log(chalk.bgGreen('You now need to define the necessary credential fields for the service connection.'));
+    this.log(chalk.green('You should now define the necessary credential fields for the service connection.'));
     FlowXOUtils.promptUtils.repeatedPrompt.call(this, 'field', FlowXOUtils.prompts.credentials, function(fields) {
       self.auth.fields = fields;
       done();
