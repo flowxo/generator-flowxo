@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "flowxo-sdk": "^3.2.1"
+    "flowxo-sdk": "^3.2.2"
   },
   "main": "lib/index.js",
   "devDependencies": {
@@ -22,9 +22,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/flowxo/<%= serviceName %>"
+    "url": "https://bitbucket.org/flowxo/<%= serviceName %>"
   },
   "bugs": {
-    "url": "https://github.com/flowxo/<%= serviceName %>/issues"
+    "url": "https://bitbucket.org/flowxo/<%= serviceName %>/issues"
   }
 }
