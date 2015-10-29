@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.6] - 2015-10-29
+### Updated
+- Scaffolded `package.json` file for latest SDK (3.4.0).
+- Added `sslOAuthCallback` option to scaffolded `Gruntfile.js`.
+
 ## [2.1.5] - 2015-10-27
 ### Updated
 - Simplified update notification.
