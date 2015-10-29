@@ -58,7 +58,11 @@ module.exports = function(grunt) {
         },
       },
       init: {},
-      auth: {},
+      auth: {
+        options: {
+          sslOAuthCallback: true
+        }
+      },
       run: {
         options: {
           runsFolder: 'runs',
