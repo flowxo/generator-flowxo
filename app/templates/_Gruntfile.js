@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       init: {},
       auth: {
         options: {
-          sslOAuthCallback: true
+          sslOAuthCallback: false
         }
       },
       run: {

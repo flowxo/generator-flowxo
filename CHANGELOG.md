@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.7] - 2015-10-29
+### Fixed
+- `sslOAuthCallback` option to false by default.
+
 ## [2.1.6] - 2015-10-29
 ### Updated
 - Scaffolded `package.json` file for latest SDK (3.4.0).
@@ -86,6 +90,8 @@ This is a breaking change, hence the major version number bump.
 ### Added
 - Initial release of the generator.
 
+[2.1.7]: https://github.com/flowxo/generator-flowxo/compare/v2.1.6...v2.1.7
+[2.1.6]: https://github.com/flowxo/generator-flowxo/compare/v2.1.5...v2.1.6
 [2.1.5]: https://github.com/flowxo/generator-flowxo/compare/v2.1.4...v2.1.5
 [2.1.4]: https://github.com/flowxo/generator-flowxo/compare/v2.1.3...v2.1.4
 [2.1.3]: https://github.com/flowxo/generator-flowxo/compare/v2.1.2...v2.1.3
