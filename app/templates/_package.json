@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "flowxo-sdk": "^3.4.0"
+    "flowxo-sdk": "^3.5.3"
   },
   "main": "lib/index.js",
   "devDependencies": {
@@ -15,10 +15,11 @@
     "jshint-stylish": "^2.0.1",
     "load-grunt-tasks": "^3.2.0",
     "nopt-grunt-fix": "^1.0.0",
+    "semver": "^5.0.3",
     "time-grunt": "^1.2.1"
   },
   "engines": {
-    "node": ">=0.12.0"
+    "node": "^4.2.2"
   },
   "repository": {
     "type": "git",
