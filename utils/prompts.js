@@ -15,6 +15,13 @@ module.exports = {
       }
     },
 
+    // Help URL
+    {
+      type: 'input',
+      name: 'help',
+      message: 'What is the URL for the help doc?'
+    },
+
     // Auth Type
     {
       type: 'list',

@@ -57,6 +57,7 @@ FlowXOGenerator.prototype.prompting = function() {
   this.prompt(prompts, function(props) {
     self.name = props.name;
     self.slug = _.snakeCase(self.name);
+    self.help = props.help || '';
     self.slugUpperCased = self.slug.toUpperCase();
     self.auth = {
       type: props.auth_type

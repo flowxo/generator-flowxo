@@ -5,7 +5,8 @@ var sdk = require('flowxo-sdk');
 var service = new sdk.Service({
   serviceRoot: __dirname,
   name: '<%= name %>',
-  slug: '<%= slug %>',<% if(auth.type === 'credentials') { %>
+  slug: '<%= slug %>',
+  help: '<%= help %>',<% if(auth.type === 'credentials') { %>
   auth: {
     type: 'credentials',
     fields: [<% auth.fields.forEach(function(f, i) { %>{
