@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.0] - 2015-12-09
+### Added
+- Scaffolding `help` property for service's configuration.
+
+### Removed
+- Scaffolded `engines` property for service's `package.json`.
+
 ## [3.0.0] - 2015-11-05
 - Added code to ensure that the developer is running a specific version of node when scaffolding and developing their service. This is to ensure that the development and deployment to the Flow XO platform is using the same underlying runtime.
 
@@ -93,6 +100,7 @@ This is a breaking change, hence the major version number bump.
 ### Added
 - Initial release of the generator.
 
+[3.1.0]: https://github.com/flowxo/generator-flowxo/compare/v3.0.0...v3.1.0
 [3.0.0]: https://github.com/flowxo/generator-flowxo/compare/v2.1.7...v3.0.0
 [2.1.7]: https://github.com/flowxo/generator-flowxo/compare/v2.1.6...v2.1.7
 [2.1.6]: https://github.com/flowxo/generator-flowxo/compare/v2.1.5...v2.1.6
