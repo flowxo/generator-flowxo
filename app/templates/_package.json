@@ -1,9 +1,9 @@
 {
-  "name": "<%= serviceName %>",
+  "name": "<%= module %>",
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "flowxo-sdk": "^3.6.1"
+    "flowxo-sdk": "^3.6.2"
   },
   "main": "lib/index.js",
   "devDependencies": {
@@ -20,9 +20,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/flowxo/<%= serviceName %>"
+    "url": "https://bitbucket.org/flowxo/<%= module %>"
   },
   "bugs": {
-    "url": "https://bitbucket.org/flowxo/<%= serviceName %>/issues"
+    "url": "https://bitbucket.org/flowxo/<%= module %>/issues"
   }
 }

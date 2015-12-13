@@ -42,7 +42,7 @@ var FlowXOGenerator = module.exports = function FlowXOGenerator() {
 
   this.pkg = JSON.parse(wiring.readFileAsString(path.join(__dirname, '../package.json')));
   this.on('end', function() {
-    this.log(chalk.cyan('\nYour service has been generated in the ' + this.serviceName + ' folder.\n'));
+    this.log(chalk.cyan('\nYour service has been generated in the ' + this.module + ' folder.\n'));
     this.log(chalk.cyan(FlowXOUtils.messages.whatNext[this.auth.type]));
   });
 
@@ -56,14 +56,15 @@ FlowXOGenerator.prototype.prompting = function() {
   var prompts = FlowXOUtils.prompts.service;
   this.prompt(prompts, function(props) {
     self.name = props.name;
-    self.slug = _.snakeCase(self.name);
+    var slug = _.kebabCase(props.name.toLowerCase());
+    self.slug = slug;
     self.help = props.help || '';
     self.slugUpperCased = self.slug.toUpperCase();
     self.auth = {
       type: props.auth_type
     };
-    self.serviceName = SERVICES_ROOT + _.kebabCase(self.name.toLowerCase());
-    self.destinationRoot(self.serviceName);
+    self.module = SERVICES_ROOT + slug;
+    self.destinationRoot(self.module);
     done();
   });
 
