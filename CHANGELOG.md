@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.1.2] - 2015-12-15
+### Fixed
+- Repo URLs now point to bitbucket.
+
 ## [3.1.1] - 2015-12-13
 ### Fixed
 - Slug and module name are now equivalent.
