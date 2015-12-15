@@ -26,16 +26,12 @@
     "type": "git",
     "url": "https://github.com/flowxo/generator-flowxo.git"
   },
-  "engines": {
-    "node": "^4.2.2"
-  },
   "dependencies": {
     "chalk": "^1.1.1",
     "html-wiring": "^1.2.0",
     "lodash": "^3.10.1",
     "log-symbols": "^1.0.2",
     "mkdirp": "^0.5.1",
-    "semver": "^5.0.3",
     "update-notifier": "^0.5.0",
     "yeoman-generator": "^0.20.3"
   },

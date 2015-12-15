@@ -10,17 +10,11 @@ var wiring = require('html-wiring');
 var FlowXOUtils = require('../utils');
 var pkg = require('../package.json');
 var updateNotifier  = require('update-notifier');
-var semver = require('semver');
 
 var SERVICES_ROOT = 'flowxo-services-';
 
 var FlowXOGenerator = module.exports = function FlowXOGenerator() {
   yeoman.generators.Base.apply(this, arguments);
-
-  // Check we are using the correct version of node
-  if (!semver.satisfies(process.versions.node, pkg.engines.node)) {
-    this.env.error(chalk.red('Incorrect Node version: you are running ' + process.versions.node + ', but the generator requires a version matching semver ' + pkg.engines.node + '.\n'));
-  }
 
   this.option('debug');
 

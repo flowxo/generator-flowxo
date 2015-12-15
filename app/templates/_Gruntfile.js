@@ -2,15 +2,6 @@
 'use strict';
 
 module.exports = function(grunt) {
-
-  // Check we are using the correct version of node
-  var semver = require('semver'),
-      pjson = require('./package.json');
-
-  if (!semver.satisfies(process.versions.node, pjson.engines.node)) {
-    grunt.fatal('Incorrect Node version: you are running ' + process.versions.node + ', but the service requires a version matching semver ' + pjson.engines.node + '.\n');
-  }
-
   // Fix grunt options
   // Can remove if using grunt 0.5
   // https://github.com/gruntjs/grunt/issues/908
