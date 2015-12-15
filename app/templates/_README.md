@@ -7,7 +7,7 @@ This is a <%= name %> service module for the [Flow XO](https://flowxo.com) platf
 Steps to run the service from the command line using the Flow XO SDK
 ``` bash
 # Clone the repo
-git clone https://github.com/flowxo/<%= module %>
+git clone https://bitbucket.org/flowxo/<%= module %>
 cd <%= module %>
 
 # Install the dependencies
@@ -30,7 +30,7 @@ grunt run
 
 ``` bash
 # Clone the repo
-git clone https://github.com/flowxo/<%= module %>
+git clone https://bitbucket.org/flowxo/<%= module %>
 
 # Install the dependencies
 npm install -g yo grunt-cli
