@@ -49,14 +49,19 @@ FlowXOGenerator.prototype.prompting = function() {
   var self = this;
   var prompts = FlowXOUtils.prompts.service;
   this.prompt(prompts, function(props) {
+    var nameLowerCased = props.name.toLowerCase();
+    var slug = _.kebabCase(nameLowerCased);
+    var snake = _.snakeCase(nameLowerCased);
+
     self.name = props.name;
-    var slug = _.kebabCase(props.name.toLowerCase());
     self.slug = slug;
+    self.envSlug = snake.toUpperCase();
     self.help = props.help || '';
-    self.slugUpperCased = self.slug.toUpperCase();
     self.auth = {
       type: props.auth_type
     };
+    self.isOAuth = props.auth_type.indexOf('oauth') === 0;
+    self.hasAuth = props.auth_type !== 'none';
     self.module = SERVICES_ROOT + slug;
     self.destinationRoot(self.module);
     done();
@@ -89,7 +94,9 @@ FlowXOGenerator.prototype.coreFiles = function coreFiles() {
   this.template('_Gruntfile.js', 'Gruntfile.js');
   this.template('_CHANGELOG.md', 'CHANGELOG.md');
   this.template('_README.md', 'README.md');
-  this.template('_env', '.env');
+  if(this.isOAuth) {
+    this.template('_env', '.env');
+  }
 
   // Lib
   mkdirp('lib');

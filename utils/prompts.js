@@ -28,12 +28,13 @@ module.exports = {
       name: 'auth_type',
       message: 'What sort of authentication does the service use?',
       choices: [
+        {name: '(none)', value: 'none'},
         {name: 'Credentials (e.g. API Key or username/password)', value: 'credentials'},
         {name: 'OAuth 1', value: 'oauth1'},
         {name: 'OAuth 2', value: 'oauth2'},
         // {name: 'OpenID', value: 'openid'},
       ],
-      default: 0,
+      default: 1,
       validate: function(input) {
         return !!input;
       }

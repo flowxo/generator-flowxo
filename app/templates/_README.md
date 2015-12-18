@@ -5,6 +5,7 @@ This is a <%= name %> service module for the [Flow XO](https://flowxo.com) platf
 ## Usage
 
 Steps to run the service from the command line using the Flow XO SDK
+
 ``` bash
 # Clone the repo
 git clone https://bitbucket.org/flowxo/<%= module %>
@@ -12,17 +13,16 @@ cd <%= module %>
 
 # Install the dependencies
 npm install
-grunt init
+grunt init<% if(isOAuth) { %>
 
-<% if(auth.type.indexOf('oauth') === 0) { %>
 # Create a .env file with the following content (no hashes):
-<% if(auth.type.indexOf('oauth')===0) { %><%= slugUpperCased %><% if(auth.type === 'oauth1') { %>_KEY=<YOUR_APP_KEY><% } else { %>_ID=<YOUR_APP_ID><% } %>
-<%= slugUpperCased %>_SECRET=<YOUR_APP_SECRET><% } %><% } %>
+<%= envSlug %>_ID=<YOUR_APP_ID>
+<%= envSlug %>_SECRET=<YOUR_APP_SECRET>
 
-# Create an authentication
+<% } %><% if(hasAuth) { %># Create an authentication
 grunt auth
 
-# Run methods
+<% } %># Run methods
 grunt run
 ```
 
