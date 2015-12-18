@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.0] - 2015-12-18
+### Added
+- Support for services with no auth.
+
+### Fixed
+- A regression where the env vars for OAuth services were not correctly underscored.
+- OAuth1 env var is now `SERVICE_ID` instead of `SERVICE_KEY`.
+
 ## [3.1.3] - 2015-12-15
 ### Removed
 - Stringent node check has been removed so that future versions of node will work ok with generated services.
@@ -112,6 +120,7 @@ This is a breaking change, hence the major version number bump.
 ### Added
 - Initial release of the generator.
 
+[3.2.0]: https://github.com/flowxo/generator-flowxo/compare/v3.1.3...v3.2.0
 [3.1.3]: https://github.com/flowxo/generator-flowxo/compare/v3.1.2...v3.1.3
 [3.1.2]: https://github.com/flowxo/generator-flowxo/compare/v3.1.1...v3.1.2
 [3.1.1]: https://github.com/flowxo/generator-flowxo/compare/v3.1.0...v3.1.1
