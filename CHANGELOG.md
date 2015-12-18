@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.2] - 2015-12-18
+### Fixed
+- Updated SDK version.
+
 ## [3.2.1] - 2015-12-18
 ### Fixed
 - Correct version of SDK for scaffolded service.
@@ -124,6 +128,7 @@ This is a breaking change, hence the major version number bump.
 ### Added
 - Initial release of the generator.
 
+[3.2.2]: https://github.com/flowxo/generator-flowxo/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/flowxo/generator-flowxo/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/flowxo/generator-flowxo/compare/v3.1.3...v3.2.0
 [3.1.3]: https://github.com/flowxo/generator-flowxo/compare/v3.1.2...v3.1.3
