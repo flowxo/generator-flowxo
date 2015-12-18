@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "flowxo-sdk": "^3.7.0"
+    "flowxo-sdk": "^3.7.1"
   },
   "main": "lib/index.js",
   "devDependencies": {
