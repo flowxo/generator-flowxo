@@ -13,9 +13,9 @@ cd <%= module %>
 
 # Install the dependencies
 npm install
-grunt init<% if(isOAuth) { %>
+grunt init
 
-# Create a .env file with the following content (no hashes):
+<% if(isOAuth) { %># Create a .env file with the following content (no hashes):
 <%= envSlug %>_ID=<YOUR_APP_ID>
 <%= envSlug %>_SECRET=<YOUR_APP_SECRET>
 
