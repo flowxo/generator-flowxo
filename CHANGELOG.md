@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0] - 2016-03-11
+### Fixed
+- Updated SDK version and other deps.
+
 ## [3.2.2] - 2015-12-18
 ### Fixed
 - Updated SDK version.
@@ -128,6 +132,7 @@ This is a breaking change, hence the major version number bump.
 ### Added
 - Initial release of the generator.
 
+[4.0.0]: https://github.com/flowxo/generator-flowxo/compare/v3.2.2...v4.0.0
 [3.2.2]: https://github.com/flowxo/generator-flowxo/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/flowxo/generator-flowxo/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/flowxo/generator-flowxo/compare/v3.1.3...v3.2.0
