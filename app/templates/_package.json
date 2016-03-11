@@ -3,17 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "flowxo-sdk": "^3.7.1"
+    "flowxo-sdk": "^4.0.0"
   },
   "main": "lib/index.js",
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-jshint": "^1.0.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-env": "^0.4.4",
     "grunt-jsbeautifier": "^0.2.10",
     "jshint-stylish": "^2.0.1",
-    "load-grunt-tasks": "^3.2.0",
+    "load-grunt-tasks": "^3.4.1",
     "nopt-grunt-fix": "^1.0.0",
     "time-grunt": "^1.2.1"
   },
